@@ -1,0 +1,54 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding-top: var(--safe-top);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-header);
+}
+
+.bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--header-height);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.2px;
+  white-space: nowrap;
+}
+
+/* 見た目は 24〜31px のアイコンだが、タップ領域は最低 44×44px を確保する */
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.back {
+  position: absolute;
+  /* アイコン左端をページマージン(20px)に揃える */
+  left: calc(var(--page-margin) - (var(--tap-min) - 31px) / 2);
+}
+
+/* グリッドとプレビューのアイコン間隔は Figma 上 16px、右端はページマージン(20px) */
+.actions {
+  position: absolute;
+  right: calc(var(--page-margin) - (var(--tap-min) - 24px) / 2);
+  display: flex;
+  gap: calc(var(--gutter) - (var(--tap-min) - 24px));
+}
+
+.actions:empty {
+  display: none;
+}

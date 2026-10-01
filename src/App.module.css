@@ -1,0 +1,6 @@
+/* モバイル幅のレイアウトを、広い画面では中央に寄せて表示する */
+.app {
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+  background: var(--color-bg);
+}

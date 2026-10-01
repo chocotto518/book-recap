@@ -1,0 +1,28 @@
+.screen {
+  min-height: 100dvh;
+  padding-bottom: var(--safe-bottom);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding: 28px var(--page-margin) 0;
+}
+
+.placeholder {
+  color: var(--color-sub-text);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.back {
+  min-height: var(--tap-min);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  cursor: pointer;
+}
