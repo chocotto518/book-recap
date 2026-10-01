@@ -20,19 +20,19 @@ export function Header({ title, onBack, onChangeTemplate, onPreview }: HeaderPro
       <div className={styles.bar}>
         {onBack && (
           <button type="button" className={`${styles.iconButton} ${styles.back}`} onClick={onBack} aria-label="戻る">
-            <img src="/icons/back.svg" alt="" width={31} height={31} />
+            <img src={`${import.meta.env.BASE_URL}icons/back.svg`} alt="" width={31} height={31} />
           </button>
         )}
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.actions}>
           {onChangeTemplate && (
             <button type="button" className={styles.iconButton} onClick={onChangeTemplate} aria-label="テンプレート変更">
-              <img src="/icons/grid.svg" alt="" width={24} height={24} />
+              <img src={`${import.meta.env.BASE_URL}icons/grid.svg`} alt="" width={24} height={24} />
             </button>
           )}
           {onPreview && (
             <button type="button" className={styles.iconButton} onClick={onPreview} aria-label="プレビュー">
-              <img src="/icons/preview.svg" alt="" width={24} height={24} />
+              <img src={`${import.meta.env.BASE_URL}icons/preview.svg`} alt="" width={24} height={24} />
             </button>
           )}
         </div>

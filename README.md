@@ -19,3 +19,11 @@ npm run dev
 - デザイントークン: `src/styles/global.css`
 - 共通コンポーネント: `src/components`（Header / Stepbar / TemplateOptionCard）
 - 画面: `src/screens`
+
+## ブラウザで確認（Node.js 不要）
+
+`main` に push されると GitHub Actions がビルドし、GitHub Pages に公開する。
+
+https://chocotto518.github.io/book-recap/
+
+初回のみ、リポジトリの Settings → Pages → Build and deployment → Source を「GitHub Actions」にする。

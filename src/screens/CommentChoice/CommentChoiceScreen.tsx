@@ -27,13 +27,13 @@ export function CommentChoiceScreen({ onSelect }: CommentChoiceScreenProps) {
             <TemplateOptionCard
               title="感想を書く"
               description={`1枚につき最大${MAX_BOOKS.list}冊`}
-              thumbnailSrc="/images/template-list.png"
+              thumbnailSrc={`${import.meta.env.BASE_URL}images/template-list.png`}
               onSelect={() => onSelect(true)}
             />
             <TemplateOptionCard
               title="感想を書かない"
               description={`1枚につき最大${MAX_BOOKS.grid}冊`}
-              thumbnailSrc="/images/template-grid.png"
+              thumbnailSrc={`${import.meta.env.BASE_URL}images/template-grid.png`}
               onSelect={() => onSelect(false)}
             />
           </div>
