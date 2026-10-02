@@ -7,22 +7,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-6);
-  padding: 28px var(--page-margin) 0;
+  /* ヘッダー下 28px にステップバー、その下 37px にコンテンツ（Figma 準拠） */
+  padding: 28px var(--page-margin) var(--space-6);
 }
 
-.placeholder {
-  color: var(--color-sub-text);
-  font-size: 14px;
-  line-height: 1.6;
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  margin-top: 37px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
   text-align: center;
 }
 
-.back {
-  min-height: var(--tap-min);
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  background: var(--color-surface);
-  cursor: pointer;
+.question {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.2px;
+}
+
+.hint {
+  color: var(--color-sub-text);
+  font-size: 14px;
+  line-height: 16.8px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gutter);
 }
