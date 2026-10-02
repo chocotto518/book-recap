@@ -5,14 +5,6 @@
   padding: var(--space-6) var(--page-margin) var(--safe-bottom);
 }
 
-.image {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1080 / 1440;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-}
-
 .note {
   color: var(--color-sub-text);
   font-size: 12px;

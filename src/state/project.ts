@@ -1,4 +1,5 @@
 import type { TemplateType } from '../constants/template';
+import type { ColorId } from '../render/colors';
 
 export type Template = {
   type: TemplateType;
@@ -26,6 +27,8 @@ export type Project = {
   userName: string;
   /** テンプレートの冊数ぶん並ぶ。未登録の枠は空の Book */
   books: Book[];
+  /** カラー選択で選んだ色 */
+  color: ColorId;
 };
 
 export const emptyProject: Project = {
@@ -33,6 +36,7 @@ export const emptyProject: Project = {
   theme: '',
   userName: '',
   books: [],
+  color: 'default',
 };
 
 export const newId = () =>

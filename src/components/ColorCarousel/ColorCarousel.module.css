@@ -1,0 +1,45 @@
+.viewport {
+  overflow: hidden;
+  width: 100%;
+  /* カードの影が切れないよう上下に余白を持たせる */
+  padding: 8px 0;
+  margin: -8px 0;
+  outline: none;
+}
+
+.viewport:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: -2px;
+}
+
+.track {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  /* 縦スクロールはブラウザに任せ、横の動きだけをこちらで扱う */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.dragging {
+  transition: none;
+}
+
+.card {
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: inherit;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    transition-duration: 0.01s;
+  }
+}
