@@ -9,13 +9,15 @@ type ColorStepProps = {
   project: Project;
   template: Template;
   onColorChange: (color: ColorId) => void;
+  /** 中央のカードをタップしたとき（書き出しへ進む） */
+  onConfirm: () => void;
 };
 
 /** カードの見た目の幅 303px を端末の画素密度で描ける解像度（最大 1080px） */
 const previewScale = () => Math.min(1, (303 * (window.devicePixelRatio || 1)) / 1080);
 
 /** 編集 step3：カラー選択。カードを横にスライドして選ぶ。カードの中は今の入力内容で描いたプレビュー */
-export function ColorStep({ project, template, onColorChange }: ColorStepProps) {
+export function ColorStep({ project, template, onColorChange, onConfirm }: ColorStepProps) {
   const current = Math.max(
     0,
     PALETTES.findIndex((p) => p.id === project.color),
@@ -32,6 +34,7 @@ export function ColorStep({ project, template, onColorChange }: ColorStepProps) 
           index={current}
           onIndexChange={(i) => onColorChange(PALETTES[i].id)}
           onPeek={setPeek}
+          onSelectCurrent={onConfirm}
           labelOf={(i) => `${PALETTES[i].label}${i === current ? '（選択中）' : ''}`}
           renderCard={(i) => (
             <span className={styles.card}>

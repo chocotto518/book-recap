@@ -2,8 +2,8 @@ import type { ButtonHTMLAttributes } from 'react';
 import styles from './Button.module.css';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  /** primary: 塗り / outline: 白地に枠線 / text: グレー文字だけ */
-  variant?: 'primary' | 'outline' | 'text';
+  /** primary: 塗り / secondary: 白地に茶色の枠線 / outline: 白地にグレーの枠線 / text: グレー文字だけ */
+  variant?: 'primary' | 'secondary' | 'outline' | 'text';
   /** L: 20px の大ボタン / M: 16px（モーダル内など） */
   size?: 'L' | 'M';
 };
