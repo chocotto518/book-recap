@@ -7,13 +7,15 @@ import styles from './CommentChoiceScreen.module.css';
 
 type CommentChoiceScreenProps = {
   onSelect: (hasComment: boolean) => void;
+  /** 渡したときだけヘッダーに「＜」を出す（モーダルで開いたときに閉じる用） */
+  onBack?: () => void;
 };
 
 /** テンプレート設定 step1：感想の有無 */
-export function CommentChoiceScreen({ onSelect }: CommentChoiceScreenProps) {
+export function CommentChoiceScreen({ onSelect, onBack }: CommentChoiceScreenProps) {
   return (
     <div className={styles.screen}>
-      <Header title={TEMPLATE_SETTINGS_TITLE} />
+      <Header title={TEMPLATE_SETTINGS_TITLE} onBack={onBack} />
       <main className={styles.main}>
         <Stepbar steps={TEMPLATE_SETTINGS_STEPS} current={0} />
         <section className={styles.content} aria-labelledby="comment-choice-heading">

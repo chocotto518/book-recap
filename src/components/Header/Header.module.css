@@ -46,7 +46,11 @@
   position: absolute;
   right: calc(var(--page-margin) - (var(--tap-min) - 24px) / 2);
   display: flex;
-  gap: calc(var(--gutter) - (var(--tap-min) - 24px));
+}
+
+/* タップ領域どうしが 4px 重なるぶん詰めて、アイコンの見た目の間隔を 16px にする（gap は負の値にできない） */
+.actions > * + * {
+  margin-left: calc(var(--gutter) - (var(--tap-min) - 24px));
 }
 
 .actions:empty {

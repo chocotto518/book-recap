@@ -1,10 +1,14 @@
-import { Fragment } from 'react';
+import { Fragment, type CSSProperties } from 'react';
 import styles from './Stepbar.module.css';
 
 type StepbarProps = {
   steps: readonly string[];
   /** 0 始まりの現在ステップ */
   current: number;
+  /** ステップ間の線の長さ（Figma：2ステップは 100px、3ステップは 60px） */
+  lineWidth?: number;
+  /** 丸・ラベルと線の間隔（Figma：2ステップは 4px、3ステップは 7px） */
+  gap?: number;
 };
 
 type StepState = 'done' | 'active' | 'todo';
@@ -15,9 +19,9 @@ const badgeClass: Record<StepState, string> = {
   todo: styles.badge,
 };
 
-export function Stepbar({ steps, current }: StepbarProps) {
+export function Stepbar({ steps, current, lineWidth = 100, gap = 4 }: StepbarProps) {
   return (
-    <ol className={styles.stepbar}>
+    <ol className={styles.stepbar} style={{ gap, '--line-width': `${lineWidth}px` } as CSSProperties}>
       {steps.map((label, i) => {
         const state: StepState = i < current ? 'done' : i === current ? 'active' : 'todo';
         return (

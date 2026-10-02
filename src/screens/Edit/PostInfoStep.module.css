@@ -1,0 +1,89 @@
+/* ステップバー下 29px にフォーム、その下 51px に説明図、その下 49px にボタン（Figma 準拠） */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  margin-top: 29px;
+}
+
+.diagram {
+  position: relative;
+  width: 335px;
+  max-width: 100%;
+  height: 232px;
+  margin: 51px 0 0;
+}
+
+.thumbnail {
+  position: absolute;
+  top: 0;
+  left: 9px;
+  width: 174px;
+  height: 232px;
+  border: 1px solid var(--color-border);
+  object-fit: cover;
+  background: var(--color-surface);
+}
+
+.line {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line img {
+  flex: none;
+  max-width: none;
+}
+
+.lineTheme {
+  top: 13px;
+  left: 110px;
+  width: 106px;
+  height: 17px;
+}
+
+.lineTheme img {
+  transform: rotate(9.11deg);
+}
+
+.lineUser {
+  top: 209px;
+  left: 105px;
+  width: 116px;
+  height: 13px;
+}
+
+.lineUser img {
+  transform: rotate(-6.39deg);
+}
+
+.note {
+  position: absolute;
+  color: var(--color-primary-700);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.8px;
+  white-space: nowrap;
+}
+
+.noteTheme {
+  top: 21px;
+  left: 221px;
+}
+
+.noteUser {
+  top: 191px;
+  left: 204px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  margin-top: 49px;
+}

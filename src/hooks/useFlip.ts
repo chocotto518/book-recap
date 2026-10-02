@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, type RefObject } from 'react';
+import { getScroller } from '../lib/scroller';
 
 const DURATION = 400;
 const EASING = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
@@ -26,7 +27,7 @@ export function useFlip(rootRef: RefObject<HTMLElement | null>, deps: unknown[])
     pending.current = null;
     if (!p) return;
 
-    window.scrollTo(0, p.scrollTo);
+    getScroller(rootRef.current).scrollTop = p.scrollTo;
     const el = find(p.key);
     if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
