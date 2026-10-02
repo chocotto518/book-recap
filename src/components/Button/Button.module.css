@@ -30,6 +30,8 @@
   color: var(--color-sub-text);
   font-size: 16px;
   line-height: 19.2px;
+  /* タップ領域は 44px 確保しつつ、レイアウト上は文字の高さだけを占める */
+  margin-block: calc((19.2px - var(--tap-min)) / 2);
 }
 
 .primary:focus-visible,
