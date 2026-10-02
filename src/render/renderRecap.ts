@@ -49,7 +49,7 @@ async function prepare(input: RecapInput) {
   const sample = Object.values(SAMPLE).join('') + TEXT.copyright.text;
   if (typeof document !== 'undefined' && document.fonts) {
     await Promise.all(
-      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, { size: GRID_TEXT.title.minSize, weight: GRID_TEXT.title.weight }, TEXT.author, GRID_TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
+      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, GRID_TEXT.author, { size: 20, weight: 700 }, { size: 20, weight: 400 }, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
         document.fonts.load(font(style), texts + sample).catch(() => []),
       ),
     );
@@ -144,39 +144,75 @@ function blockExtent(lines: { title: string[]; author: string; comment: string[]
   return { top: -TEXT.title.lineHeight / 2, bottom: last + bottomHalf };
 }
 
-/** タイトルが maxLines 行に収まる最大の文字サイズを探す（収まらなければ最小サイズで末尾を「…」にする） */
-function fitTitle(ctx: CanvasRenderingContext2D, title: string, width: number) {
-  const { size, minSize, weight, maxLines } = GRID_TEXT.title;
-  for (let s = size; s >= minSize; s -= 2) {
-    ctx.font = font({ size: s, weight });
-    const lines = wrapText(ctx, title, width);
-    if (lines.length <= maxLines) return { size: s, lines };
-  }
-  ctx.font = font({ size: minSize, weight });
-  return { size: minSize, lines: wrapText(ctx, title, width, maxLines) };
+type FittedText = { size: number; lineHeight: number; lines: string[] };
+
+/** 文字サイズごとに折り返し、maxLines 行に収まれば返す。最小サイズでも収まらなければ末尾を「…」にする */
+function wrapAt(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  width: number,
+  style: { weight: number; lineHeightRatio: number; maxLines: number; minSize: number },
+  size: number,
+): FittedText | null {
+  ctx.font = font({ size, weight: style.weight });
+  const lines = text ? wrapText(ctx, text, width) : [];
+  const lineHeight = size * style.lineHeightRatio;
+  if (lines.length <= style.maxLines) return { size, lineHeight, lines };
+  if (size > style.minSize) return null;
+  return { size, lineHeight, lines: wrapText(ctx, text, width, style.maxLines) };
 }
 
-/** グリッド型：書影の下にタイトル（最大 2 行、収まらなければ縮小）と作者を中央揃えで描く */
+const blockHeight = (title: FittedText, author: FittedText) =>
+  title.lines.length * title.lineHeight +
+  (author.lines.length ? GRID_TEXT.gapTitleAuthor + author.lines.length * author.lineHeight : 0);
+
+/**
+ * グリッド型のタイトル・作者の文字サイズを決める。
+ * どちらも最大 2 行。2 行に収まらない、または 2 つ合わせて文字エリアに収まらないときは、
+ * 作者 → タイトルの順に小さくする（最小 20px、それでも収まらなければ末尾を「…」）
+ */
+function fitGridText(ctx: CanvasRenderingContext2D, title: string, author: string, width: number) {
+  const { title: t, author: a, areaHeight, minTop } = GRID_TEXT;
+  let last: { title: FittedText; author: FittedText } | null = null;
+  for (let ts = t.size; ts >= t.minSize; ts -= 2) {
+    const titleFit = wrapAt(ctx, title, width, t, ts);
+    if (!titleFit) continue;
+    for (let as = a.size; as >= a.minSize; as -= 2) {
+      const authorFit = wrapAt(ctx, author, width, a, as);
+      if (!authorFit) continue;
+      last = { title: titleFit, author: authorFit };
+      if (blockHeight(titleFit, authorFit) <= areaHeight - minTop) return last;
+    }
+  }
+  return last!;
+}
+
+/** グリッド型：書影の下の文字エリア（高さ 144px）にタイトルと作者を中央揃えで描く */
 function drawGridText(ctx: CanvasRenderingContext2D, title: string, author: string, rect: Rect, palette: Palette) {
   const width = rect.w + GRID_TEXT.overflow * 2;
   const cx = rect.x + rect.w / 2;
-  const { size, lines } = title ? fitTitle(ctx, title, width) : { size: GRID_TEXT.title.size, lines: [] as string[] };
-  const lineHeight = size * GRID_TEXT.title.lineHeightRatio;
-  // 32px のときの 1 行目は見本と同じ位置。小さくしたときは行の上端をそろえる
-  const baseLineHeight = GRID_TEXT.title.size * GRID_TEXT.title.lineHeightRatio;
-  let y = rect.y + rect.h + GRID_TEXT.titleOffset - (baseLineHeight - lineHeight) / 2;
+  const fit = fitGridText(ctx, title, author, width);
+  const height = blockHeight(fit.title, fit.author);
+  // 普段は見本と同じ位置から。文字が多くてはみ出しそうなときだけ上に詰める
+  const top = rect.y + rect.h + Math.max(GRID_TEXT.minTop, Math.min(GRID_TEXT.titleTop, GRID_TEXT.areaHeight - height));
 
   ctx.textAlign = 'center';
+  let y = top;
   ctx.fillStyle = palette.accent;
-  ctx.font = font({ size, weight: GRID_TEXT.title.weight });
-  lines.forEach((line, i) => ctx.fillText(line, cx, y + i * lineHeight));
-  y += Math.max(0, lines.length - 1) * lineHeight;
+  ctx.font = font({ size: fit.title.size, weight: GRID_TEXT.title.weight });
+  fit.title.lines.forEach((line) => {
+    ctx.fillText(line, cx, y + fit.title.lineHeight / 2);
+    y += fit.title.lineHeight;
+  });
 
-  if (author) {
+  if (fit.author.lines.length) {
+    y += GRID_TEXT.gapTitleAuthor;
     ctx.fillStyle = AUTHOR_COLOR;
-    ctx.font = font(GRID_TEXT.author);
-    const authorY = y + lineHeight / 2 + GRID_TEXT.gapTitleAuthor + GRID_TEXT.author.lineHeight / 2;
-    ctx.fillText(ellipsize(ctx, author, width), cx, authorY);
+    ctx.font = font({ size: fit.author.size, weight: GRID_TEXT.author.weight });
+    fit.author.lines.forEach((line) => {
+      ctx.fillText(line, cx, y + fit.author.lineHeight / 2);
+      y += fit.author.lineHeight;
+    });
   }
 }
 
