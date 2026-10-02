@@ -49,7 +49,7 @@ async function prepare(input: RecapInput) {
   const sample = Object.values(SAMPLE).join('') + TEXT.copyright.text;
   if (typeof document !== 'undefined' && document.fonts) {
     await Promise.all(
-      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
+      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, { size: GRID_TEXT.title.minSize, weight: GRID_TEXT.title.weight }, TEXT.author, GRID_TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
         document.fonts.load(font(style), texts + sample).catch(() => []),
       ),
     );
@@ -144,6 +144,42 @@ function blockExtent(lines: { title: string[]; author: string; comment: string[]
   return { top: -TEXT.title.lineHeight / 2, bottom: last + bottomHalf };
 }
 
+/** タイトルが maxLines 行に収まる最大の文字サイズを探す（収まらなければ最小サイズで末尾を「…」にする） */
+function fitTitle(ctx: CanvasRenderingContext2D, title: string, width: number) {
+  const { size, minSize, weight, maxLines } = GRID_TEXT.title;
+  for (let s = size; s >= minSize; s -= 2) {
+    ctx.font = font({ size: s, weight });
+    const lines = wrapText(ctx, title, width);
+    if (lines.length <= maxLines) return { size: s, lines };
+  }
+  ctx.font = font({ size: minSize, weight });
+  return { size: minSize, lines: wrapText(ctx, title, width, maxLines) };
+}
+
+/** グリッド型：書影の下にタイトル（最大 2 行、収まらなければ縮小）と作者を中央揃えで描く */
+function drawGridText(ctx: CanvasRenderingContext2D, title: string, author: string, rect: Rect, palette: Palette) {
+  const width = rect.w + GRID_TEXT.overflow * 2;
+  const cx = rect.x + rect.w / 2;
+  const { size, lines } = title ? fitTitle(ctx, title, width) : { size: GRID_TEXT.title.size, lines: [] as string[] };
+  const lineHeight = size * GRID_TEXT.title.lineHeightRatio;
+  // 32px のときの 1 行目は見本と同じ位置。小さくしたときは行の上端をそろえる
+  const baseLineHeight = GRID_TEXT.title.size * GRID_TEXT.title.lineHeightRatio;
+  let y = rect.y + rect.h + GRID_TEXT.titleOffset - (baseLineHeight - lineHeight) / 2;
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = palette.accent;
+  ctx.font = font({ size, weight: GRID_TEXT.title.weight });
+  lines.forEach((line, i) => ctx.fillText(line, cx, y + i * lineHeight));
+  y += Math.max(0, lines.length - 1) * lineHeight;
+
+  if (author) {
+    ctx.fillStyle = AUTHOR_COLOR;
+    ctx.font = font(GRID_TEXT.author);
+    const authorY = y + lineHeight / 2 + GRID_TEXT.gapTitleAuthor + GRID_TEXT.author.lineHeight / 2;
+    ctx.fillText(ellipsize(ctx, author, width), cx, authorY);
+  }
+}
+
 /** 1080×1440 の座標系で描く。ctx は呼び出し側で拡大縮小してよい */
 export async function drawRecap(ctx: CanvasRenderingContext2D, input: RecapInput) {
   const { covers, placeholder } = await prepare(input);
@@ -177,16 +213,7 @@ export async function drawRecap(ctx: CanvasRenderingContext2D, input: RecapInput
     const comment = isList ? book?.comment || (sample ? [...SAMPLE.comment].slice(0, commentMax).join('') : '') : '';
 
     if (!isList) {
-      const width = rect.w + GRID_TEXT.overflow * 2;
-      const cx = rect.x + rect.w / 2;
-      const bottom = rect.y + rect.h;
-      ctx.textAlign = 'center';
-      ctx.fillStyle = palette.accent;
-      ctx.font = font(GRID_TEXT.title);
-      ctx.fillText(ellipsize(ctx, title, width), cx, bottom + GRID_TEXT.titleOffset);
-      ctx.fillStyle = AUTHOR_COLOR;
-      ctx.font = font(TEXT.author);
-      ctx.fillText(ellipsize(ctx, author, width), cx, bottom + GRID_TEXT.authorOffset);
+      drawGridText(ctx, title, author, rect, palette);
       return;
     }
 
