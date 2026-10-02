@@ -1,0 +1,43 @@
+/* ステップバー下 29px に案内文、その下 12px に枠（Figma 準拠） */
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: 29px;
+}
+
+.hint {
+  font-size: 14px;
+  line-height: 21px;
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* 枠の下からボタンまで：リスト型 34px／グリッド型 44px（Figma 準拠） */
+.actionsList,
+.actionsGrid {
+  width: 100%;
+}
+
+.actionsList {
+  margin-top: 34px;
+}
+
+.actionsGrid {
+  margin-top: 44px;
+}
