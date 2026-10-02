@@ -1,0 +1,68 @@
+.stepbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.badge,
+.badgeActive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--color-on-primary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.badge {
+  width: 28px;
+  height: 28px;
+  /* 非アクティブは 28px のため、32px のアクティブと中心を揃える */
+  margin-top: 2px;
+  background: var(--color-border);
+  font-size: 12px;
+  line-height: 14.4px;
+}
+
+.badgeActive {
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary-700);
+  font-size: 14px;
+  line-height: 16.8px;
+}
+
+.label,
+.labelActive {
+  font-size: 12px;
+  line-height: 14.4px;
+  white-space: nowrap;
+}
+
+.badge + .label {
+  /* 非アクティブ時もラベルの縦位置をアクティブと揃える */
+  margin-top: 2px;
+}
+
+.labelActive {
+  font-weight: 500;
+}
+
+.line {
+  flex: 0 0 100px;
+  height: 2px;
+  margin-top: 15px;
+  background: var(--color-border);
+}
