@@ -56,9 +56,11 @@ export const GRID_COVERS: Record<number, Rect[]> = {
 
 export const GRID_TEXT = {
   areaHeight: 144,
+  /** グリッド型のタイトルはリスト型（36px）より小さい 32px */
+  title: { size: 32, weight: 700 },
   /** 書影の下端 → タイトル中心 / 作者中心 */
   titleOffset: 39.5,
-  authorOffset: 91,
+  authorOffset: 92,
   /** 書影の幅に対して左右にはみ出してよい幅 */
   overflow: 20,
 };

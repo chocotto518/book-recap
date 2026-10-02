@@ -49,7 +49,7 @@ async function prepare(input: RecapInput) {
   const sample = Object.values(SAMPLE).join('') + TEXT.copyright.text;
   if (typeof document !== 'undefined' && document.fonts) {
     await Promise.all(
-      [TEXT.header, TEXT.footer, TEXT.title, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
+      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
         document.fonts.load(font(style), texts + sample).catch(() => []),
       ),
     );
@@ -182,7 +182,7 @@ export async function drawRecap(ctx: CanvasRenderingContext2D, input: RecapInput
       const bottom = rect.y + rect.h;
       ctx.textAlign = 'center';
       ctx.fillStyle = palette.accent;
-      ctx.font = font(TEXT.title);
+      ctx.font = font(GRID_TEXT.title);
       ctx.fillText(ellipsize(ctx, title, width), cx, bottom + GRID_TEXT.titleOffset);
       ctx.fillStyle = AUTHOR_COLOR;
       ctx.font = font(TEXT.author);
