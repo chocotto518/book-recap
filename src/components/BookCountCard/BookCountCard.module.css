@@ -41,6 +41,10 @@ button.card:active {
 }
 
 .count {
+  display: flex;
+  align-items: baseline;
+  /* 20px と 14px をベースラインで揃えると行が 2px 伸びるため、Figma どおり 28px に固定 */
+  height: 28px;
   line-height: 28px;
 }
 
