@@ -1,4 +1,5 @@
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,11 +10,19 @@
   border-radius: var(--radius-card);
   background: var(--color-surface);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
   transition: transform 0.1s ease;
 }
 
-.card:active {
+button.card {
+  cursor: pointer;
+}
+
+.large {
+  padding: var(--space-1) var(--space-4) var(--space-4);
+  box-shadow: var(--shadow-card);
+}
+
+button.card:active {
   transform: scale(0.98);
 }
 

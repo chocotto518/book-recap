@@ -29,7 +29,7 @@ export function App() {
         <BookCountScreen
           templateType={screen.templateType}
           onBack={() => goTo({ name: 'commentChoice' })}
-          onSelect={(bookCount) => goTo({ name: 'designSelect', templateType: screen.templateType, bookCount })}
+          onConfirm={(bookCount) => goTo({ name: 'designSelect', templateType: screen.templateType, bookCount })}
         />
       )}
       {screen.name === 'designSelect' && (
