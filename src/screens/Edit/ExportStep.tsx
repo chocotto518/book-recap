@@ -80,12 +80,9 @@ export function ExportStep({ project, template }: ExportStepProps) {
         <Button onClick={() => void save()} disabled={!file}>
           端末に保存
         </Button>
-        <div className={styles.share}>
-          <Button variant="secondary" onClick={() => void shareToX()} disabled={!file}>
-            Xで共有
-          </Button>
-          <p className={styles.note}>端末にも保存されます</p>
-        </div>
+        <Button variant="secondary" onClick={() => void shareToX()} disabled={!file}>
+          Xで共有
+        </Button>
       </div>
     </section>
   );

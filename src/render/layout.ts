@@ -12,9 +12,16 @@ export const CANVAS = { width: 1080, height: 1440 };
 export const FONT_FAMILY = '"IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", sans-serif';
 
 export const TEXT = {
-  header: { size: 24, weight: 500, centerY: 58, lineY: 59, gap: 32 },
-  footer: { size: 16, weight: 400, centerY: 1380, lineY: 1379, gap: 32 },
-  copyright: { size: 11, weight: 400, centerY: 1407.5, text: '表紙画像の著作権は各出版社・著作者に帰属します' },
+  header: { size: 24, weight: 500, centerY: 58, lineY: 59, gap: 24 },
+  footer: { size: 16, weight: 400, centerY: 1379, lineY: 1379, gap: 24 },
+  copyright: {
+    size: 11,
+    weight: 400,
+    centerY: 1407.5,
+    /** テーマあり・ユーザー名なしのとき（線のすぐ下に寄せる） */
+    centerYWithoutUser: 1398.5,
+    text: '表紙画像の著作権は各出版社・著作者に帰属します',
+  },
   title: { size: 36, weight: 700, lineHeight: 52, maxLines: 2 },
   author: { size: 32, weight: 400 },
   comment: { size: 24, weight: 400, lineHeight: 32 },
@@ -33,9 +40,9 @@ export const LIST_COVERS: Record<number, Rect[]> = {
 
 export const LIST_TEXT = {
   /** 書影の右端から文字までの間隔 */
-  gapFromCover: 66,
+  gapFromCover: 34,
   /** 文字の右端 */
-  right: 997,
+  right: 1017,
   /** タイトル最終行の中心 → 作者の中心 */
   titleToAuthor: 52.5,
   /** 作者の中心 → 感想 1 行目の中心 */

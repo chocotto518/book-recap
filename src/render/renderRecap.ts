@@ -78,24 +78,48 @@ function drawImageCover(ctx: CanvasRenderingContext2D, img: HTMLImageElement, r:
   ctx.restore();
 }
 
-/** 中央の文字と、その左右に伸びる線 */
+/** 中央の文字。withLines のときは左右に線を伸ばす */
 function drawRuledText(
   ctx: CanvasRenderingContext2D,
   text: string,
   style: { size: number; weight: number; centerY: number; lineY: number; gap: number },
   color: string,
+  withLines: boolean,
 ) {
   ctx.fillStyle = color;
   ctx.font = font(style);
   const maxWidth = CANVAS.width - 2 * (64 + style.gap);
   const label = ellipsize(ctx, text, maxWidth);
-  const width = label ? ctx.measureText(label).width : 0;
+  const width = ctx.measureText(label).width;
   ctx.textAlign = 'center';
   ctx.fillText(label, CANVAS.width / 2, style.centerY);
-  const left = label ? CANVAS.width / 2 - width / 2 - style.gap : CANVAS.width / 2;
-  const right = label ? CANVAS.width / 2 + width / 2 + style.gap : CANVAS.width / 2;
+  if (!withLines) return;
+  const left = CANVAS.width / 2 - width / 2 - style.gap;
+  const right = CANVAS.width / 2 + width / 2 + style.gap;
   ctx.fillRect(0, style.lineY, left, 1);
   ctx.fillRect(right, style.lineY, CANVAS.width - right, 1);
+}
+
+/**
+ * ヘッダー（テーマ）とフッター（ユーザー名・著作権表記）。
+ * 線はテーマがあるときだけ引く（テーマが画像の枠の役目をするため）
+ * - テーマあり・ユーザー名あり：上下とも文字の左右に線
+ * - テーマあり・ユーザー名なし：下は端から端まで 1 本の線、著作権表記を線の下に寄せる
+ * - テーマなし・ユーザー名あり：線なし、ユーザー名と著作権表記だけ
+ * - テーマなし・ユーザー名なし：著作権表記だけ
+ */
+function drawHeaderFooter(ctx: CanvasRenderingContext2D, theme: string, userName: string, palette: Palette) {
+  if (theme) drawRuledText(ctx, theme, TEXT.header, palette.accent, true);
+  if (userName) drawRuledText(ctx, userName, TEXT.footer, palette.accent, Boolean(theme));
+  else if (theme) {
+    ctx.fillStyle = palette.accent;
+    ctx.fillRect(0, TEXT.footer.lineY, CANVAS.width, 1);
+  }
+  ctx.fillStyle = COPYRIGHT_COLOR;
+  ctx.font = font(TEXT.copyright);
+  ctx.textAlign = 'center';
+  const copyrightY = theme && !userName ? TEXT.copyright.centerYWithoutUser : TEXT.copyright.centerY;
+  ctx.fillText(TEXT.copyright.text, CANVAS.width / 2, copyrightY);
 }
 
 /** 1 冊の本の文字（タイトル・作者・感想）を、指定した位置から縦に並べて描く */
@@ -228,13 +252,12 @@ export async function drawRecap(ctx: CanvasRenderingContext2D, input: RecapInput
   ctx.fillStyle = palette.background;
   ctx.fillRect(0, 0, CANVAS.width, CANVAS.height);
 
-  // ヘッダー（テーマ）とフッター（ユーザー名・著作権表記）
-  drawRuledText(ctx, input.theme || (fillEmpty ? SAMPLE.theme : ''), TEXT.header, palette.accent);
-  drawRuledText(ctx, input.userName || (fillEmpty ? SAMPLE.userName : ''), TEXT.footer, palette.accent);
-  ctx.fillStyle = COPYRIGHT_COLOR;
-  ctx.font = font(TEXT.copyright);
-  ctx.textAlign = 'center';
-  ctx.fillText(TEXT.copyright.text, CANVAS.width / 2, TEXT.copyright.centerY);
+  drawHeaderFooter(
+    ctx,
+    input.theme || (fillEmpty ? SAMPLE.theme : ''),
+    input.userName || (fillEmpty ? SAMPLE.userName : ''),
+    palette,
+  );
 
   rects.forEach((rect, i) => {
     const book = input.books[i];

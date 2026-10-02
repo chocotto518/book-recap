@@ -8,7 +8,7 @@
 
 .question {
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 19.2px;
   text-align: center;
 }
@@ -41,17 +41,4 @@
   gap: var(--space-4);
   width: 100%;
   margin-top: 38px;
-}
-
-.share {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.note {
-  color: var(--color-sub-text);
-  font-size: 14px;
-  line-height: 16.8px;
-  text-align: right;
 }
