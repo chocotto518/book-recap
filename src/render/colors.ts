@@ -16,7 +16,7 @@ export const AUTHOR_COLOR = '#6b6b6b';
 export const COPYRIGHT_COLOR = '#7e7c7d';
 
 export const PALETTES: Palette[] = [
-  { id: 'default', label: 'デフォルト', accent: '#262420', background: '#ffffff', comment: '#262420' },
+  { id: 'default', label: 'デフォルト', accent: '#000000', background: '#ffffff', comment: '#000000' },
   { id: 'pink', label: 'ピンク', accent: '#b8396b', background: '#fdf8fa', comment: '#000000' },
   { id: 'orange', label: 'オレンジ', accent: '#c2591e', background: '#fdf9f7', comment: '#000000' },
   { id: 'blue', label: 'ブルー', accent: '#2e6690', background: '#f8fafb', comment: '#000000' },
