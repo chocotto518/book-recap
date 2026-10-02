@@ -7,17 +7,31 @@ type StepbarProps = {
   current: number;
 };
 
+type StepState = 'done' | 'active' | 'todo';
+
+const badgeClass: Record<StepState, string> = {
+  done: styles.badgeDone,
+  active: styles.badgeActive,
+  todo: styles.badge,
+};
+
 export function Stepbar({ steps, current }: StepbarProps) {
   return (
     <ol className={styles.stepbar}>
       {steps.map((label, i) => {
-        const active = i === current;
+        const state: StepState = i < current ? 'done' : i === current ? 'active' : 'todo';
         return (
           <Fragment key={label}>
-            {i > 0 && <li className={styles.line} aria-hidden="true" />}
-            <li className={styles.step} aria-current={active ? 'step' : undefined}>
-              <span className={active ? styles.badgeActive : styles.badge}>{i + 1}</span>
-              <span className={active ? styles.labelActive : styles.label}>{label}</span>
+            {i > 0 && <li className={i <= current ? styles.lineFilled : styles.line} aria-hidden="true" />}
+            <li className={styles.step} aria-current={state === 'active' ? 'step' : undefined}>
+              <span className={badgeClass[state]}>
+                {state === 'done' ? (
+                  <img src={`${import.meta.env.BASE_URL}icons/check.svg`} alt="完了" width={20} height={20} />
+                ) : (
+                  i + 1
+                )}
+              </span>
+              <span className={state === 'active' ? styles.labelActive : styles.label}>{label}</span>
             </li>
           </Fragment>
         );

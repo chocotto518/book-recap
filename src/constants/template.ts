@@ -15,4 +15,16 @@ export const MAX_BOOKS: Record<TemplateType, number> = {
   grid: 6,
 };
 
+/** リスト型の冊数ごとの感想の文字数上限 */
+export const COMMENT_MAX_LENGTH: Record<number, number> = {
+  4: 80,
+  3: 120,
+  2: 160,
+  1: 200,
+};
+
 export const templateTypeFromComment = (hasComment: boolean): TemplateType => (hasComment ? 'list' : 'grid');
+
+/** 選べる冊数（多い順） */
+export const bookCountOptions = (type: TemplateType): number[] =>
+  Array.from({ length: MAX_BOOKS[type] }, (_, i) => MAX_BOOKS[type] - i);

@@ -16,6 +16,7 @@
 }
 
 .badge,
+.badgeDone,
 .badgeActive {
   display: flex;
   align-items: center;
@@ -26,14 +27,22 @@
   text-align: center;
 }
 
-.badge {
+/* 未着手・完了は 28px のため、32px のアクティブと中心を揃える */
+.badge,
+.badgeDone {
   width: 28px;
   height: 28px;
-  /* 非アクティブは 28px のため、32px のアクティブと中心を揃える */
   margin-top: 2px;
-  background: var(--color-border);
   font-size: 12px;
   line-height: 14.4px;
+}
+
+.badge {
+  background: var(--color-border);
+}
+
+.badgeDone {
+  background: var(--color-primary-700);
 }
 
 .badgeActive {
@@ -51,7 +60,8 @@
   white-space: nowrap;
 }
 
-.badge + .label {
+.badge + .label,
+.badgeDone + .label {
   /* 非アクティブ時もラベルの縦位置をアクティブと揃える */
   margin-top: 2px;
 }
@@ -60,9 +70,14 @@
   font-weight: 500;
 }
 
-.line {
+.line,
+.lineFilled {
   flex: 0 0 100px;
   height: 2px;
   margin-top: 15px;
   background: var(--color-border);
+}
+
+.lineFilled {
+  background: var(--color-primary-700);
 }
