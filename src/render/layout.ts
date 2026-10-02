@@ -55,14 +55,18 @@ export const GRID_COVERS: Record<number, Rect[]> = {
 };
 
 export const GRID_TEXT = {
+  /** 書影の下の文字エリアの高さ。タイトル 2 行＋作者 1 行がこの中に収まる */
   areaHeight: 144,
-  /** グリッド型のタイトルはリスト型（36px）より小さい 32px */
-  title: { size: 32, weight: 700 },
-  /** 書影の下端 → タイトル中心 / 作者中心 */
+  /** タイトルは 32px・最大 2 行。2 行に収まらないときは minSize まで小さくする */
+  title: { size: 32, minSize: 20, weight: 700, lineHeightRatio: 1.25, maxLines: 2 },
+  /** 作者は 24px・1 行 */
+  author: { size: 24, weight: 400, lineHeight: 32 },
+  /** 書影の下端 → タイトル 1 行目の中心（Figma の見本の位置） */
   titleOffset: 39.5,
-  authorOffset: 92,
-  /** 書影の幅に対して左右にはみ出してよい幅 */
-  overflow: 20,
+  /** タイトルの最後の行と作者の行の間隔 */
+  gapTitleAuthor: 8,
+  /** 書影の幅に対して左右にはみ出してよい幅（隣の列の文字とくっつかない程度） */
+  overflow: 8,
 };
 
 export const coversFor = (type: TemplateType, count: number) => (type === 'list' ? LIST_COVERS : GRID_COVERS)[count] ?? [];
