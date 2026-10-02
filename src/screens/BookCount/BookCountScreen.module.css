@@ -43,3 +43,36 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gutter);
 }
+
+/* 選択後：拡大したカードとボタン（ステップバー下 21px、カード下 28px にボタン） */
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  margin-top: 21px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.fadeIn {
+  animation: fade-in 0.3s ease 0.15s both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeIn {
+    animation: none;
+  }
+}
