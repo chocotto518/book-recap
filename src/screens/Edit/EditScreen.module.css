@@ -10,14 +10,3 @@
   /* ヘッダー下 28px にステップバー（Figma 準拠） */
   padding: 28px var(--page-margin) var(--space-6);
 }
-
-.placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  margin-top: 48px;
-  color: var(--color-sub-text);
-  font-size: 14px;
-  text-align: center;
-}

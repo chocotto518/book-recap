@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
@@ -9,6 +8,7 @@ import { fitBooks, isBookFilled, type Project, type Template } from '../../state
 import { PreviewContent } from './PreviewContent';
 import { PostInfoStep } from './PostInfoStep';
 import { RegisterBooksStep } from './RegisterBooksStep';
+import { ColorStep } from './ColorStep';
 import styles from './EditScreen.module.css';
 
 type EditScreenProps = {
@@ -54,12 +54,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange }: 
             onNext={() => goTo(2)}
           />
         ) : (
-          <div className={styles.placeholder}>
-            <p>{EDIT_STEPS[step]}の画面は Figma のデザイン待ちです</p>
-            <Button variant="text" onClick={() => goTo(step - 1)}>
-              {EDIT_STEPS[step - 1]}に戻る
-            </Button>
-          </div>
+          <ColorStep project={project} template={template} onColorChange={(color) => onChange({ color })} />
         )}
       </main>
 
@@ -84,7 +79,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange }: 
 
       <Modal open={previewOpen} onClose={() => setPreviewOpen(false)} label={PREVIEW_TITLE}>
         <Header title={PREVIEW_TITLE} onBack={() => setPreviewOpen(false)} />
-        <PreviewContent template={template} />
+        <PreviewContent project={project} template={template} />
       </Modal>
     </div>
   );

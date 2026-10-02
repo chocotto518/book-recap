@@ -1,0 +1,72 @@
+/* ステップバー下 29px に案内文、その下 16px にカード、カードの下 32px にカラーボタン（Figma 準拠） */
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 29px;
+}
+
+.hint {
+  font-size: 14px;
+  line-height: 16.8px;
+  text-align: center;
+}
+
+/* 画面の左右いっぱいまで使い、隣のカードがはみ出して見えるようにする */
+.carousel {
+  width: calc(100% + var(--page-margin) * 2);
+  margin: 16px calc(var(--page-margin) * -1) 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.label {
+  font-size: 16px;
+  line-height: 19.2px;
+  white-space: nowrap;
+}
+
+.dots {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: 32px;
+}
+
+/* 見た目は 22px の丸、タップ領域は 44px 確保する */
+.dot {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--dot-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dot::after {
+  position: absolute;
+  inset: calc((22px - var(--tap-min)) / 2);
+  content: '';
+}
+
+/* 真ん中のカードの色は白丸（色の枠線）になる */
+.dotActive {
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 4px var(--dot-color);
+}
+
+.dot:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 3px;
+}
