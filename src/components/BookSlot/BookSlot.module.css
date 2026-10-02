@@ -1,0 +1,148 @@
+.list,
+.grid {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-slot);
+  text-align: left;
+  cursor: pointer;
+  /* 長押しで並べ替えるため、文字選択や画像の長押しメニューを出さない */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.list:focus-visible,
+.grid:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 2px;
+}
+
+/* ---- リスト型（感想あり） ---- */
+.list {
+  gap: var(--space-2);
+  height: 124px;
+  padding: var(--space-3);
+}
+
+.numberColumn {
+  display: flex;
+  align-items: center;
+  height: 112px;
+}
+
+.list .cover {
+  flex-shrink: 0;
+  width: 66px;
+  height: 100px;
+}
+
+.list .text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  font-weight: 500;
+}
+
+.list .title {
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 19.2px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.list .author {
+  overflow: hidden;
+  color: var(--color-sub-text);
+  font-size: 14px;
+  line-height: 16.8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.comment {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 18px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.list .action {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-primary-100);
+  font-size: 16px;
+  line-height: 19.2px;
+  white-space: nowrap;
+}
+
+/* ---- グリッド型（感想なし） ---- */
+.grid {
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+}
+
+.grid .cover {
+  width: 85px;
+  max-width: 100%;
+  height: 129px;
+}
+
+.grid .text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 70px;
+  max-width: 100%;
+  font-weight: 500;
+  text-align: center;
+}
+
+.grid .title {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 14.4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.grid .author {
+  overflow: hidden;
+  color: var(--color-sub-text);
+  font-size: 10px;
+  line-height: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.grid .action {
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-card);
+  background: var(--color-primary-100);
+  font-size: 14px;
+  line-height: 16.8px;
+  white-space: nowrap;
+}
+
+/* ---- 共通 ---- */
+.cover {
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* 登録した書影はトリミングしない（出力と同じ contain） */
+.coverImage {
+  object-fit: contain;
+}

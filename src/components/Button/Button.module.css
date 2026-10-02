@@ -1,4 +1,5 @@
 .primary,
+.outline,
 .text {
   display: flex;
   align-items: center;
@@ -19,7 +20,24 @@
   line-height: 24px;
 }
 
-.primary:active {
+.outline {
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  border: 1px solid var(--color-sub-text);
+  background: var(--color-surface);
+  color: var(--color-sub-text);
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.sizeM {
+  min-height: var(--tap-min);
+  font-size: 16px;
+  line-height: 19.2px;
+}
+
+.primary:active,
+.outline:active {
   opacity: 0.85;
 }
 
@@ -35,6 +53,7 @@
 }
 
 .primary:focus-visible,
+.outline:focus-visible,
 .text:focus-visible {
   outline: 2px solid var(--color-primary-700);
   outline-offset: 2px;

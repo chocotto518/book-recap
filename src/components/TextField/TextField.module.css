@@ -39,6 +39,23 @@
   line-height: 19.2px;
 }
 
+.textarea {
+  height: 130px;
+  resize: none;
+}
+
+.count {
+  margin-left: auto;
+  color: var(--color-sub-text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.4px;
+}
+
+.countOver {
+  color: var(--color-required);
+}
+
 .input::placeholder {
   color: var(--color-placeholder);
 }

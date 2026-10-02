@@ -8,6 +8,7 @@
   --color-placeholder: #cccccc;   /* book/gray/placeholder */
   --color-required: #bc2626;
   --color-primary-700: #6d5741;   /* book/primary-700 */
+  --color-primary-100: #d5ccb6;   /* book/primary-100 */
   --color-on-primary: #ffffff;
 
   /* 4px ベースのスペーシング。左右マージン20px・ガター16px で全画面統一 */
@@ -30,6 +31,7 @@
 
   --shadow-header: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-card: 0 0 5px rgba(0, 0, 0, 0.2);
+  --shadow-slot: 0 0 5px rgba(0, 0, 0, 0.15);
   --radius-card: 8px;
 
   --font-sans: 'IBM Plex Sans JP', system-ui, -apple-system, 'Hiragino Sans', sans-serif;

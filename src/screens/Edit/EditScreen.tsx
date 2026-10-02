@@ -5,9 +5,10 @@ import { Modal } from '../../components/Modal/Modal';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
 import { EDIT_STEPS, EDIT_TITLE, PREVIEW_TITLE, TEMPLATE_SETTINGS_TITLE } from '../../constants/flow';
 import { TemplateSettingsFlow } from '../../features/TemplateSettingsFlow';
-import type { Project, Template } from '../../state/project';
+import { fitBooks, isBookFilled, type Project, type Template } from '../../state/project';
 import { PreviewContent } from './PreviewContent';
 import { PostInfoStep } from './PostInfoStep';
+import { RegisterBooksStep } from './RegisterBooksStep';
 import styles from './EditScreen.module.css';
 
 type EditScreenProps = {
@@ -34,6 +35,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange }: 
     <div className={styles.screen}>
       <Header
         title={EDIT_TITLE}
+        onBack={step > 0 ? () => goTo(step - 1) : undefined}
         onChangeTemplate={() => {
           setTemplateModalKey((k) => k + 1);
           setTemplateModalOpen(true);
@@ -44,6 +46,13 @@ export function EditScreen({ project, template, step, onStepChange, onChange }: 
         <Stepbar steps={EDIT_STEPS} current={step} lineWidth={60} gap={7} />
         {step === 0 ? (
           <PostInfoStep project={project} template={template} onChange={onChange} onNext={() => goTo(1)} />
+        ) : step === 1 ? (
+          <RegisterBooksStep
+            template={template}
+            books={project.books}
+            onBooksChange={(books) => onChange({ books })}
+            onNext={() => goTo(2)}
+          />
         ) : (
           <div className={styles.placeholder}>
             <p>{EDIT_STEPS[step]}の画面は Figma のデザイン待ちです</p>
@@ -60,7 +69,14 @@ export function EditScreen({ project, template, step, onStepChange, onChange }: 
           confirmLabel="このテンプレートに変更"
           onExit={() => setTemplateModalOpen(false)}
           onConfirm={(next) => {
-            onChange({ template: next });
+            const removed = project.books.slice(next.count).filter(isBookFilled).length;
+            if (
+              removed > 0 &&
+              !window.confirm(`${next.count + 1}冊目以降に登録した本（${removed}冊）は削除されます。テンプレートを変更しますか？`)
+            ) {
+              return;
+            }
+            onChange({ template: next, books: fitBooks(project.books, next.count) });
             setTemplateModalOpen(false);
           }}
         />

@@ -1,0 +1,59 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: max(var(--safe-top), var(--space-6)) var(--page-margin) var(--safe-bottom);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.panel {
+  width: 100%;
+  max-width: 335px;
+  margin: auto;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.open {
+  animation: fade-in 0.2s ease;
+}
+
+.open .panel {
+  animation: pop-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.closing {
+  animation: fade-out 0.15s ease forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .open,
+  .open .panel,
+  .closing {
+    animation-duration: 0.01s;
+  }
+}

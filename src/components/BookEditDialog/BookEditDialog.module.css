@@ -1,0 +1,78 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-4) var(--space-4) var(--space-6);
+}
+
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.number {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.coverButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 153px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.coverButton:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 2px;
+}
+
+.coverPlaceholder,
+.coverImage {
+  width: 100%;
+  height: 100%;
+}
+
+.coverPlaceholder {
+  object-fit: cover;
+}
+
+.coverImage {
+  object-fit: contain;
+}
+
+.coverHint {
+  position: absolute;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-sub-text);
+  font-size: 12px;
+  line-height: 14.4px;
+  white-space: nowrap;
+}
+
+.file {
+  display: none;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
