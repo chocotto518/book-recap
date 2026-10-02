@@ -1,0 +1,49 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 2px;
+  font-weight: 500;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 16.8px;
+  white-space: nowrap;
+}
+
+.required {
+  color: var(--color-required);
+  font-size: 12px;
+  line-height: 14.4px;
+}
+
+/* 16px 未満だと iOS で入力時に拡大されるため 16px を保つ */
+.input {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.2px;
+}
+
+.input::placeholder {
+  color: var(--color-placeholder);
+}
+
+.input:focus {
+  border-color: var(--color-primary-700);
+  outline: none;
+}

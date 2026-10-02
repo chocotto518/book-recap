@@ -5,6 +5,8 @@
   --color-text: #000000;
   --color-sub-text: #666666;      /* book/gray/sub-txt */
   --color-border: #999999;        /* book/gray/border df */
+  --color-placeholder: #cccccc;   /* book/gray/placeholder */
+  --color-required: #bc2626;
   --color-primary-700: #6d5741;   /* book/primary-700 */
   --color-on-primary: #ffffff;
 

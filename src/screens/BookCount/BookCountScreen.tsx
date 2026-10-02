@@ -6,19 +6,27 @@ import { Stepbar } from '../../components/Stepbar/Stepbar';
 import { TEMPLATE_SETTINGS_STEPS, TEMPLATE_SETTINGS_TITLE } from '../../constants/flow';
 import { bookCountOptions, COMMENT_MAX_LENGTH, type TemplateType } from '../../constants/template';
 import { useFlip } from '../../hooks/useFlip';
+import { getScroller } from '../../lib/scroller';
 import styles from './BookCountScreen.module.css';
 
 type BookCountScreenProps = {
   templateType: TemplateType;
   onBack: () => void;
   onConfirm: (count: number) => void;
+  /** 確定ボタンの文言 */
+  confirmLabel?: string;
 };
 
 /**
  * テンプレート設定 step2：作品数の選択
  * カードをタップするとその場で拡大して確認状態になり、「作品数の選択に戻る」で元の位置に縮む。
  */
-export function BookCountScreen({ templateType, onBack, onConfirm }: BookCountScreenProps) {
+export function BookCountScreen({
+  templateType,
+  onBack,
+  onConfirm,
+  confirmLabel = 'このテンプレートで作成',
+}: BookCountScreenProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const [collapsedFrom, setCollapsedFrom] = useState<number | null>(null);
   const gridScrollY = useRef(0);
@@ -33,7 +41,7 @@ export function BookCountScreen({ templateType, onBack, onConfirm }: BookCountSc
   });
 
   const expand = (count: number) => {
-    gridScrollY.current = window.scrollY;
+    gridScrollY.current = getScroller(rootRef.current).scrollTop;
     capture(`count-${count}`, 0);
     setCollapsedFrom(null);
     setSelected(count);
@@ -71,7 +79,7 @@ export function BookCountScreen({ templateType, onBack, onConfirm }: BookCountSc
           <section className={styles.confirm} aria-label={`${selected}冊のテンプレート`}>
             <BookCountCard {...cardProps(selected)} size="L" />
             <div className={`${styles.actions} ${styles.fadeIn}`}>
-              <Button onClick={() => onConfirm(selected)}>このテンプレートで作成</Button>
+              <Button onClick={() => onConfirm(selected)}>{confirmLabel}</Button>
               <Button variant="text" onClick={collapse}>
                 作品数の選択に戻る
               </Button>
