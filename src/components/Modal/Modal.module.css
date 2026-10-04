@@ -20,6 +20,26 @@
   animation: slide-down 0.25s ease-in forwards;
 }
 
+.fromRight.open {
+  animation-name: slide-in-right;
+}
+
+.fromRight.closing {
+  animation-name: slide-out-right;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slide-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes slide-up {
   from {
     transform: translateY(100%);

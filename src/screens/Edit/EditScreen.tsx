@@ -3,7 +3,7 @@ import { EditMenu } from '../../components/EditMenu/EditMenu';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
-import { EDIT_STEPS, EDIT_TITLE, EXPORT_STEP, EXPORT_TITLE, PREVIEW_TITLE, TEMPLATE_SETTINGS_TITLE } from '../../constants/flow';
+import { EDIT_STEPS, EDIT_TITLE, EXPORT_STEP, EXPORT_TITLE, PREVIEW_TITLE, TEMPLATE_CHANGE_TITLE } from '../../constants/flow';
 import { TemplateSettingsFlow } from '../../features/TemplateSettingsFlow';
 import { fitBooks, isBookFilled, type Project, type Template } from '../../state/project';
 import { PreviewContent } from './PreviewContent';
@@ -87,11 +87,15 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
         )}
       </main>
 
-      <Modal open={templateModalOpen} onClose={() => setTemplateModalOpen(false)} label={TEMPLATE_SETTINGS_TITLE}>
+      <Modal
+        open={templateModalOpen}
+        onClose={() => setTemplateModalOpen(false)}
+        label={TEMPLATE_CHANGE_TITLE}
+        from="right"
+      >
         <TemplateSettingsFlow
           key={templateModalKey}
-          confirmLabel="このテンプレートに変更"
-          onExit={() => setTemplateModalOpen(false)}
+          change={{ current: template, onCancel: () => setTemplateModalOpen(false) }}
           onConfirm={(next) => {
             const removed = project.books.slice(next.count).filter(isBookFilled).length;
             if (

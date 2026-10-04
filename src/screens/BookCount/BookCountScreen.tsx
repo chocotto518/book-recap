@@ -3,7 +3,7 @@ import { BookCountCard } from '../../components/BookCountCard/BookCountCard';
 import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
-import { TEMPLATE_SETTINGS_STEPS, TEMPLATE_SETTINGS_TITLE } from '../../constants/flow';
+import { TEMPLATE_CHANGE_TITLE, TEMPLATE_SETTINGS_STEPS, TEMPLATE_SETTINGS_TITLE } from '../../constants/flow';
 import { bookCountOptions, COMMENT_MAX_LENGTH, type TemplateType } from '../../constants/template';
 import { useFlip } from '../../hooks/useFlip';
 import { getScroller } from '../../lib/scroller';
@@ -15,17 +15,20 @@ type BookCountScreenProps = {
   onConfirm: (count: number) => void;
   /** 確定ボタンの文言 */
   confirmLabel?: string;
+  /** テンプレート変更から開いたとき：「現在の設定：…」の文言（「作品数の選択に戻る」は出さない） */
+  changeLabel?: string;
 };
 
 /**
  * テンプレート設定 step2：作品数の選択
- * カードをタップするとその場で拡大して確認状態になり、「作品数の選択に戻る」で元の位置に縮む。
+ * カードをタップするとその場で拡大して確認状態になり、「作品数の選択に戻る」（テンプレート変更ではヘッダーの「＜」）で元の位置に縮む。
  */
 export function BookCountScreen({
   templateType,
   onBack,
   onConfirm,
   confirmLabel = 'このテンプレートで作成',
+  changeLabel,
 }: BookCountScreenProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const [collapsedFrom, setCollapsedFrom] = useState<number | null>(null);
@@ -56,8 +59,12 @@ export function BookCountScreen({
 
   return (
     <div className={styles.screen} ref={rootRef}>
-      <Header title={TEMPLATE_SETTINGS_TITLE} onBack={selected === null ? onBack : collapse} />
-      <main className={styles.main}>
+      <Header
+        title={changeLabel ? TEMPLATE_CHANGE_TITLE : TEMPLATE_SETTINGS_TITLE}
+        onBack={selected === null ? onBack : collapse}
+      />
+      <main className={`${styles.main} ${changeLabel ? styles.mainChange : ''}`}>
+        {changeLabel && <p className={styles.current}>{changeLabel}</p>}
         <Stepbar steps={TEMPLATE_SETTINGS_STEPS} current={1} />
         {selected === null ? (
           <section className={styles.content} aria-labelledby="book-count-heading">
@@ -80,9 +87,11 @@ export function BookCountScreen({
             <BookCountCard {...cardProps(selected)} size="L" />
             <div className={`${styles.actions} ${styles.fadeIn}`}>
               <Button onClick={() => onConfirm(selected)}>{confirmLabel}</Button>
-              <Button variant="text" onClick={collapse}>
-                作品数の選択に戻る
-              </Button>
+              {!changeLabel && (
+                <Button variant="text" onClick={collapse}>
+                  作品数の選択に戻る
+                </Button>
+              )}
             </div>
           </section>
         )}
