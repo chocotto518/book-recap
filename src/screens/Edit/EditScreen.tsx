@@ -5,7 +5,7 @@ import { Modal } from '../../components/Modal/Modal';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
 import { EDIT_STEPS, EDIT_TITLE, EXPORT_STEP, EXPORT_TITLE, PREVIEW_TITLE, TEMPLATE_CHANGE_TITLE } from '../../constants/flow';
 import { TemplateSettingsFlow } from '../../features/TemplateSettingsFlow';
-import { fitBooks, isBookFilled, type Project, type Template } from '../../state/project';
+import { planTemplateChange, type Project, type Template } from '../../state/project';
 import { PreviewContent } from './PreviewContent';
 import { PostInfoStep } from './PostInfoStep';
 import { RegisterBooksStep } from './RegisterBooksStep';
@@ -97,14 +97,9 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
           key={templateModalKey}
           change={{ current: template, onCancel: () => setTemplateModalOpen(false) }}
           onConfirm={(next) => {
-            const removed = project.books.slice(next.count).filter(isBookFilled).length;
-            if (
-              removed > 0 &&
-              !window.confirm(`${next.count + 1}冊目以降に登録した本（${removed}冊）は削除されます。テンプレートを変更しますか？`)
-            ) {
-              return;
-            }
-            onChange({ template: next, books: fitBooks(project.books, next.count) });
+            const { books, warnings } = planTemplateChange(project.books, next);
+            if (warnings.length && !window.confirm(`${warnings.join('\n')}\nテンプレートを変更しますか？`)) return;
+            onChange({ template: next, books });
             setTemplateModalOpen(false);
           }}
         />

@@ -15,13 +15,13 @@ type BookCountScreenProps = {
   onConfirm: (count: number) => void;
   /** 確定ボタンの文言 */
   confirmLabel?: string;
-  /** テンプレート変更から開いたとき：「現在の設定：…」の文言（「作品数の選択に戻る」は出さない） */
+  /** テンプレート変更から開いたとき：「現在の設定：…」の文言 */
   changeLabel?: string;
 };
 
 /**
  * テンプレート設定 step2：作品数の選択
- * カードをタップするとその場で拡大して確認状態になり、「作品数の選択に戻る」（テンプレート変更ではヘッダーの「＜」）で元の位置に縮む。
+ * カードをタップするとその場で拡大して確認状態になり、「作品数の選択に戻る」かヘッダーの「＜」で元の位置に縮む。
  */
 export function BookCountScreen({
   templateType,
@@ -87,11 +87,9 @@ export function BookCountScreen({
             <BookCountCard {...cardProps(selected)} size="L" />
             <div className={`${styles.actions} ${styles.fadeIn}`}>
               <Button onClick={() => onConfirm(selected)}>{confirmLabel}</Button>
-              {!changeLabel && (
-                <Button variant="text" onClick={collapse}>
-                  作品数の選択に戻る
-                </Button>
-              )}
+              <Button variant="text" onClick={collapse}>
+                作品数の選択に戻る
+              </Button>
             </div>
           </section>
         )}

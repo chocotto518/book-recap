@@ -1,4 +1,4 @@
-import type { TemplateType } from '../constants/template';
+import { COMMENT_MAX_LENGTH, type TemplateType } from '../constants/template';
 import type { ColorId } from '../render/colors';
 
 export type Template = {
@@ -59,3 +59,33 @@ export const templateThumbnail = ({ type, count }: Template) =>
   `${import.meta.env.BASE_URL}images/count-${type}-${count}.png`;
 
 export const coverPlaceholder = `${import.meta.env.BASE_URL}images/cover-placeholder.png`;
+
+/**
+ * テンプレートを変えたときに本の情報がどう変わるかを調べる。
+ * - 冊数が減る：後ろの枠の本が消える
+ * - 感想なしにする：感想が消える
+ * - 感想ありのまま冊数が増える：感想の上限文字数が減り、超えた分が消える
+ */
+export function planTemplateChange(books: Book[], next: Template) {
+  const kept = fitBooks(books, next.count);
+  const removedBooks = books.slice(next.count).filter(isBookFilled).length;
+  const limit = COMMENT_MAX_LENGTH[next.count] ?? Infinity;
+  let clearedComments = 0;
+  let truncatedComments = 0;
+  const nextBooks = kept.map((book) => {
+    if (!book.comment) return book;
+    if (next.type === 'grid') {
+      clearedComments++;
+      return { ...book, comment: '' };
+    }
+    const chars = [...book.comment];
+    if (chars.length <= limit) return book;
+    truncatedComments++;
+    return { ...book, comment: chars.slice(0, limit).join('') };
+  });
+  const warnings: string[] = [];
+  if (removedBooks) warnings.push(`${next.count + 1}冊目以降に登録した本（${removedBooks}冊）は削除されます。`);
+  if (clearedComments) warnings.push(`感想なしのテンプレートになるため、登録した感想（${clearedComments}冊分）は削除されます。`);
+  if (truncatedComments) warnings.push(`感想が${limit}字を超えている本（${truncatedComments}冊）は、${limit}字を超えた部分が削除されます。`);
+  return { books: nextBooks, warnings };
+}
