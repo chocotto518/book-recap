@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { EditMenu } from '../../components/EditMenu/EditMenu';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
@@ -18,18 +19,34 @@ type EditScreenProps = {
   step: number;
   onStepChange: (step: number) => void;
   onChange: (patch: Partial<Project>) => void;
+  /** 入力内容をすべて消して最初（テンプレート設定）からやり直す */
+  onReset: () => void;
 };
 
 /** 編集（投稿情報 → 本の登録 → カラー選択）と、その後の書き出し */
-export function EditScreen({ project, template, step, onStepChange, onChange }: EditScreenProps) {
+export function EditScreen({ project, template, step, onStepChange, onChange, onReset }: EditScreenProps) {
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
   // 開くたびにテンプレート設定を最初のステップから始める（閉じるアニメーション中は中身を変えない）
   const [templateModalKey, setTemplateModalKey] = useState(0);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const goTo = (next: number) => {
+    setMenuOpen(false);
     onStepChange(next);
     window.scrollTo(0, 0);
+  };
+
+  const openTemplateSettings = () => {
+    setMenuOpen(false);
+    setTemplateModalKey((k) => k + 1);
+    setTemplateModalOpen(true);
+  };
+
+  const reset = () => {
+    if (!window.confirm('入力した内容（テーマ・ユーザー名・登録した本・カラー）をすべて消して、最初からやり直しますか？')) return;
+    setMenuOpen(false);
+    onReset();
   };
 
   return (
@@ -37,11 +54,15 @@ export function EditScreen({ project, template, step, onStepChange, onChange }: 
       <Header
         title={step === EXPORT_STEP ? EXPORT_TITLE : EDIT_TITLE}
         onBack={step > 0 ? () => goTo(step - 1) : undefined}
-        onChangeTemplate={() => {
-          setTemplateModalKey((k) => k + 1);
-          setTemplateModalOpen(true);
+        onPreview={() => {
+          setMenuOpen(false);
+          setPreviewOpen(true);
         }}
-        onPreview={() => setPreviewOpen(true)}
+        menu={{
+          open: menuOpen,
+          onToggle: setMenuOpen,
+          content: <EditMenu onChangeTemplate={openTemplateSettings} onReset={reset} />,
+        }}
       />
       <main className={styles.main}>
         {step < EXPORT_STEP && <Stepbar steps={EDIT_STEPS} current={step} lineWidth={60} gap={7} />}

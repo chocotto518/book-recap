@@ -36,6 +36,11 @@ export function App() {
           step={route.step}
           onStepChange={(step) => setRoute({ name: 'edit', step })}
           onChange={update}
+          onReset={() => {
+            setProject(emptyProject);
+            setRoute({ name: 'templateSettings' });
+            window.scrollTo(0, 0);
+          }}
         />
       ) : (
         <TemplateSettingsFlow
