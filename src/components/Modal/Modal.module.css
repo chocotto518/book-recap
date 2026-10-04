@@ -20,12 +20,13 @@
   animation: slide-down 0.25s ease-in forwards;
 }
 
+/* 右からのスライドはイージーイーズ（ゆっくり動き出してゆっくり止まる）でスルーっと動かす */
 .fromRight.open {
-  animation-name: slide-in-right;
+  animation: slide-in-right 0.45s cubic-bezier(0.33, 0, 0.67, 1);
 }
 
 .fromRight.closing {
-  animation-name: slide-out-right;
+  animation: slide-out-right 0.45s cubic-bezier(0.33, 0, 0.67, 1) forwards;
 }
 
 @keyframes slide-in-right {
