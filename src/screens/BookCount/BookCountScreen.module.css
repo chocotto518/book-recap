@@ -11,6 +11,18 @@
   padding: 28px var(--page-margin) var(--space-6);
 }
 
+/* テンプレート変更：ヘッダー下 20px に「現在の設定」、その下 16px にステップバー（デザイン準拠） */
+.mainChange {
+  padding-top: 20px;
+}
+
+.current {
+  margin-bottom: var(--space-4);
+  font-size: 14px;
+  line-height: 16.8px;
+  text-align: center;
+}
+
 .content {
   display: flex;
   flex-direction: column;

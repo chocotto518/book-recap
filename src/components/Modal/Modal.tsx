@@ -7,11 +7,13 @@ type ModalProps = {
   onClose: () => void;
   /** 読み上げ用の名前 */
   label: string;
+  /** up: 下からせり上がる（閉じるときは下へ） / right: 右からスライドイン（閉じるときは右へ） */
+  from?: 'up' | 'right';
   children: ReactNode;
 };
 
-/** 下からせり上がる全画面モーダル。閉じるときは下へ戻ってから消える */
-export function Modal({ open, onClose, label, children }: ModalProps) {
+/** 全画面モーダル。閉じるときは来た方向へ戻ってから消える */
+export function Modal({ open, onClose, label, from = 'up', children }: ModalProps) {
   const [mounted, setMounted] = useState(open);
 
   if (open && !mounted) setMounted(true);
@@ -34,7 +36,7 @@ export function Modal({ open, onClose, label, children }: ModalProps) {
 
   return createPortal(
     <div
-      className={`${styles.modal} ${open ? styles.open : styles.closing}`}
+      className={`${styles.modal} ${from === 'right' ? styles.fromRight : ''} ${open ? styles.open : styles.closing}`}
       role="dialog"
       aria-modal="true"
       aria-label={label}

@@ -5,6 +5,8 @@
  */
 export const TEMPLATE_SETTINGS_TITLE = 'テンプレート設定';
 export const TEMPLATE_SETTINGS_STEPS = ['感想の有無', '作品数の選択'] as const;
+/** 編集画面のメニューから開くテンプレート変更 */
+export const TEMPLATE_CHANGE_TITLE = 'テンプレート変更';
 
 export const EDIT_TITLE = '編集';
 export const EDIT_STEPS = ['投稿情報', '本の登録', 'カラー選択'] as const;
