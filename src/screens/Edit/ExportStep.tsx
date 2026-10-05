@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../components/Button/Button';
+import { Toast } from '../../components/Toast/Toast';
 import { paletteOf } from '../../render/colors';
 import { canShareImage, createRecapPng, downloadFile, openXIntent, shareFile } from '../../render/exportImage';
 import type { Project, Template } from '../../state/project';
@@ -18,6 +19,7 @@ export function ExportStep({ project, template }: ExportStepProps) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [error, setError] = useState(false);
+  const [saved, setSaved] = useState(false);
   const key = JSON.stringify([project, template]);
 
   useEffect(() => {
@@ -50,8 +52,13 @@ export function ExportStep({ project, template }: ExportStepProps) {
 
   const save = async () => {
     if (!file) return;
-    if (canShareImage(file)) await shareFile(file);
-    else downloadFile(file);
+    if (canShareImage(file)) {
+      // 共有シートを閉じた（キャンセルした）ときは出さない
+      if (await shareFile(file)) setSaved(true);
+    } else {
+      downloadFile(file);
+      setSaved(true);
+    }
   };
 
   const shareToX = async () => {
@@ -84,6 +91,7 @@ export function ExportStep({ project, template }: ExportStepProps) {
           Xで共有
         </Button>
       </div>
+      <Toast message={saved ? '端末に保存しました' : null} onHide={() => setSaved(false)} />
     </section>
   );
 }
