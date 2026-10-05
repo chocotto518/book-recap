@@ -12,6 +12,9 @@ type PostInfoStepProps = {
 
 /** 編集 step1：投稿情報（テーマ・ユーザー名） */
 export function PostInfoStep({ project, template, onChange, onNext }: PostInfoStepProps) {
+  // テーマかユーザー名のどちらかを入力したら進める（入力しない場合は「スキップ」）
+  const canProceed = Boolean(project.theme.trim() || project.userName.trim());
+
   return (
     <>
       <div className={styles.form}>
@@ -43,7 +46,9 @@ export function PostInfoStep({ project, template, onChange, onNext }: PostInfoSt
       </figure>
 
       <div className={styles.actions}>
-        <Button onClick={onNext}>作品の登録へ進む</Button>
+        <Button onClick={onNext} disabled={!canProceed}>
+          作品の登録へ進む
+        </Button>
         <Button variant="text" onClick={onNext}>
           スキップ
         </Button>

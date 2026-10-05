@@ -71,8 +71,3 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
-
-.actions button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
