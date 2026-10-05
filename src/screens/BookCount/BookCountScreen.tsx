@@ -17,11 +17,14 @@ type BookCountScreenProps = {
   confirmLabel?: string;
   /** テンプレート変更から開いたとき：「現在の設定：…」の文言 */
   changeLabel?: string;
+  /** テンプレート変更から開いたとき：拡大後の下のボタンを「編集に戻る」にして閉じる */
+  onCancel?: () => void;
 };
 
 /**
  * テンプレート設定 step2：作品数の選択
  * カードをタップするとその場で拡大して確認状態になり、「作品数の選択に戻る」かヘッダーの「＜」で元の位置に縮む。
+ * テンプレート変更では下のボタンは「編集に戻る」（閉じる）で、縮めるのはヘッダーの「＜」だけ。
  */
 export function BookCountScreen({
   templateType,
@@ -29,6 +32,7 @@ export function BookCountScreen({
   onConfirm,
   confirmLabel = 'このテンプレートで作成',
   changeLabel,
+  onCancel,
 }: BookCountScreenProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const [collapsedFrom, setCollapsedFrom] = useState<number | null>(null);
@@ -87,8 +91,8 @@ export function BookCountScreen({
             <BookCountCard {...cardProps(selected)} size="L" />
             <div className={`${styles.actions} ${styles.fadeIn}`}>
               <Button onClick={() => onConfirm(selected)}>{confirmLabel}</Button>
-              <Button variant="text" onClick={collapse}>
-                作品数の選択に戻る
+              <Button variant="text" onClick={onCancel ?? collapse}>
+                {onCancel ? '編集に戻る' : '作品数の選択に戻る'}
               </Button>
             </div>
           </section>
