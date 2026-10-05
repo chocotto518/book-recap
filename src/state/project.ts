@@ -58,7 +58,7 @@ export const fitBooks = (books: Book[] | undefined, count: number): Book[] => {
 export const templateThumbnail = ({ type, count }: Template) =>
   `${import.meta.env.BASE_URL}images/count-${type}-${count}.png`;
 
-export const coverPlaceholder = `${import.meta.env.BASE_URL}images/cover-placeholder.png`;
+export const coverPlaceholder = `${import.meta.env.BASE_URL}images/cover-placeholder.svg`;
 
 /**
  * テンプレートを変えたときに本の情報がどう変わるかを調べる。
