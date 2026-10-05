@@ -21,23 +21,49 @@
   width: 100%;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+/*
+ * グリッド型：冊数で並べ方を変える（デザイン準拠）
+ * - 6・5・3 冊：3 列、間隔 8px（5 冊の 2 段目は 2 枚を中央寄せ）
+ * - 4・2 冊：2 列、間隔 16px
+ * - 1 冊：2 列のときの幅で中央に 1 枚
+ */
+.grid3,
+.grid2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.grid3 {
   gap: var(--space-2);
+}
+
+.grid3 > * {
+  width: calc((100% - var(--space-2) * 2) / 3);
+}
+
+.grid2 {
+  gap: var(--gutter);
+}
+
+.grid2 > * {
+  width: calc((100% - var(--gutter)) / 2);
+}
+
+/*
+ * 枠の下からボタンまで：リスト型 34px／グリッド型 44px（Figma 準拠）。
+ * 枠が少なくて画面に余白があるときは、ボタンを画面の下に置く（冊数によってボタンの位置が動かないように）
+ */
+.sectionList {
+  margin-bottom: 34px;
+}
+
+.sectionGrid {
+  margin-bottom: 44px;
+}
+
+.actions {
   width: 100%;
-}
-
-/* 枠の下からボタンまで：リスト型 34px／グリッド型 44px（Figma 準拠） */
-.actionsList,
-.actionsGrid {
-  width: 100%;
-}
-
-.actionsList {
-  margin-top: 34px;
-}
-
-.actionsGrid {
-  margin-top: 44px;
+  margin-top: auto;
 }
