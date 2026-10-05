@@ -54,6 +54,7 @@ export function TemplateSettingsFlow({ onConfirm, change }: TemplateSettingsFlow
           onConfirm={(count) => onConfirm({ type, count })}
           confirmLabel={change ? 'このテンプレートに変更' : undefined}
           changeLabel={currentLabel}
+          onCancel={change?.onCancel}
         />
       )}
     </div>
