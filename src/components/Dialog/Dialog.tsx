@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './Dialog.module.css';
+import { pushOverlay } from '../overlayStack';
 
 type DialogProps = {
   open: boolean;
@@ -20,11 +21,13 @@ export function Dialog({ open, onClose, label, children }: DialogProps) {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    const overlay = pushOverlay();
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && overlay.isTop()) onClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => {
+      overlay.remove();
       document.body.style.overflow = prevOverflow;
       window.removeEventListener('keydown', onKeyDown);
     };

@@ -11,12 +11,15 @@ type ConfirmDialogProps = {
   /** 本文（改行は `\n`） */
   message: string;
   onConfirm: () => void;
-  onCancel: () => void;
+  /** 省略するとボタンは 1 つ（お知らせ）。背景タップ・Esc は onConfirm になる */
+  onCancel?: () => void;
   confirmLabel?: ReactNode;
   cancelLabel?: ReactNode;
+  /** キャラクターのアニメーションを出す（リセット） */
+  character?: boolean;
 };
 
-/** はい／いいえで答える確認のポップアップ（キャラクターのアニメーション付き） */
+/** 確認（いいえ／はい）とお知らせ（閉じる）のポップアップ */
 export function ConfirmDialog({
   open,
   message,
@@ -24,16 +27,19 @@ export function ConfirmDialog({
   onCancel,
   confirmLabel = 'はい',
   cancelLabel = 'いいえ',
+  character = false,
 }: ConfirmDialogProps) {
   return (
-    <Dialog open={open} onClose={onCancel} label={message}>
+    <Dialog open={open} onClose={onCancel ?? onConfirm} label={message}>
       <div className={styles.content}>
         <p className={styles.message}>{message}</p>
-        <LottiePlayer load={loadCharacter} width={102} height={156} className={styles.character} />
-        <div className={styles.actions}>
-          <Button variant="outline" size="M" onClick={onCancel}>
-            {cancelLabel}
-          </Button>
+        {character && <LottiePlayer load={loadCharacter} width={102} height={156} className={styles.character} />}
+        <div className={onCancel ? styles.actions : undefined}>
+          {onCancel && (
+            <Button variant="outline" size="M" onClick={onCancel}>
+              {cancelLabel}
+            </Button>
+          )}
           <Button size="M" onClick={onConfirm}>
             {confirmLabel}
           </Button>

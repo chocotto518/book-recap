@@ -12,6 +12,7 @@
   line-height: 24px;
   text-align: center;
   white-space: pre-line;
+  word-break: auto-phrase;
 }
 
 .character {
