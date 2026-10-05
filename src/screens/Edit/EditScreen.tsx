@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Dialog } from '../../components/Dialog/Dialog';
 import { EditMenu } from '../../components/EditMenu/EditMenu';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
@@ -105,10 +106,9 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
         />
       </Modal>
 
-      <Modal open={previewOpen} onClose={() => setPreviewOpen(false)} label={PREVIEW_TITLE}>
-        <Header title={PREVIEW_TITLE} onBack={() => setPreviewOpen(false)} />
-        <PreviewContent project={project} template={template} />
-      </Modal>
+      <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)} label={PREVIEW_TITLE}>
+        <PreviewContent project={project} template={template} onClose={() => setPreviewOpen(false)} />
+      </Dialog>
     </div>
   );
 }
