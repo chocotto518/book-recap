@@ -47,10 +47,20 @@
   line-height: 19.2px;
 }
 
-.primary:disabled,
+/* 非活性：塗りのボタンはグレー（#999）、枠線のボタンは薄くする */
+.primary:disabled {
+  background: var(--color-border);
+  cursor: default;
+}
+
 .secondary:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.primary:disabled:active,
+.secondary:disabled:active {
+  opacity: inherit;
 }
 
 .primary:active,
