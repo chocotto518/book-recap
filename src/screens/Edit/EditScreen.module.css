@@ -1,12 +1,16 @@
 .screen {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   padding-bottom: var(--safe-bottom);
 }
 
+/* 画面の高さいっぱいに広げ、ボタンを下に置けるようにする */
 .main {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* ヘッダー下 28px にステップバー（Figma 準拠） */
-  padding: 28px var(--page-margin) var(--space-6);
+  /* ヘッダー下 28px にステップバー。下端はセーフゾーン（34px）と合わせて 64px 空ける（デザイン準拠） */
+  padding: 28px var(--page-margin) 30px;
 }

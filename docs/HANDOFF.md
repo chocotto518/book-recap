@@ -1,7 +1,7 @@
 # 引き継ぎメモ（現状と残タスク）
 
 新しい会話で作業を再開するときは、まず `CLAUDE.md`（仕様・ルール）とこのファイル（進み具合・残タスク）を読む。
-最終更新：2026-10-05（PR #22 まで main にマージ済み）
+最終更新：2026-10-05（グリッド型の作品の登録の並べ方まで main にマージ済み）
 
 ## 1. 進め方の約束（ユーザーとの合意）
 
@@ -27,7 +27,7 @@
 | テンプレート設定：感想の有無 | 済 | `screens/CommentChoice/` |
 | テンプレート設定：作品数の選択（タップで拡大／縮小の FLIP アニメ） | 済 | `screens/BookCount/`、`hooks/useFlip.ts` |
 | 編集：投稿情報（テーマ・ユーザー名、説明図、どちらか入力で「進む」が活性） | 済 | `screens/Edit/PostInfoStep.tsx` |
-| 編集：作品の登録（リスト型／グリッド型、入力モーダル、書影の選択、長押しで並べ替え） | 済 | `screens/Edit/RegisterBooksStep.tsx`、`components/BookSlot`、`BookEditDialog`、`hooks/useLongPressReorder.ts` |
+| 編集：作品の登録（リスト型／グリッド型（冊数で 3 列・2 列を切り替え）、入力モーダル、書影の選択、長押しで並べ替え） | 済 | `screens/Edit/RegisterBooksStep.tsx`、`components/BookSlot`、`BookEditDialog`、`hooks/useLongPressReorder.ts` |
 | 編集：カラー選択（横スライドのカルーセル、60% でスナップ、カラーボタン） | 済 | `screens/Edit/ColorStep.tsx`、`components/ColorCarousel` |
 | 書き出し（PNG の保存・X で共有） | 済（実機の共有シートは未確認） | `screens/Edit/ExportStep.tsx`、`render/exportImage.ts` |
 | ヘッダーのプレビュー（目のアイコン、下からのモーダル） | 済（デザインは仮） | `screens/Edit/PreviewContent.tsx` |

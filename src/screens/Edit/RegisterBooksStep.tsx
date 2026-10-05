@@ -14,6 +14,9 @@ type RegisterBooksStepProps = {
   onNext: () => void;
 };
 
+/** グリッド型で 3 列に並べる冊数。それ以外（4・2・1 冊）は 2 列の幅で並べる */
+const GRID_THREE_COLUMNS = [6, 5, 3];
+
 /** 編集 step2：作品の登録。テンプレートの形（リスト型／グリッド型）に合わせて枠を並べる */
 export function RegisterBooksStep({ template, books, onBooksChange, onNext }: RegisterBooksStepProps) {
   const [editing, setEditing] = useState<number | null>(null);
@@ -29,13 +32,13 @@ export function RegisterBooksStep({ template, books, onBooksChange, onNext }: Re
 
   return (
     <>
-      <section className={styles.section} aria-label="作品の登録">
+      <section className={`${styles.section} ${isList ? styles.sectionList : styles.sectionGrid}`} aria-label="作品の登録">
         <p className={styles.hint}>
           タップで変更
           <br />
           長押しで並べ替え
         </p>
-        <div className={isList ? styles.list : styles.grid}>
+        <div className={isList ? styles.list : GRID_THREE_COLUMNS.includes(template.count) ? styles.grid3 : styles.grid2}>
           {books.map((book, index) => (
             <BookSlot
               key={book.id}
@@ -49,7 +52,7 @@ export function RegisterBooksStep({ template, books, onBooksChange, onNext }: Re
         </div>
       </section>
 
-      <div className={isList ? styles.actionsList : styles.actionsGrid}>
+      <div className={styles.actions}>
         <Button onClick={onNext}>カラー選択へ進む</Button>
       </div>
 
