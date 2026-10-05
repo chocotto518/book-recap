@@ -23,7 +23,7 @@ type EditScreenProps = {
   onReset: () => void;
 };
 
-/** 編集（投稿情報 → 本の登録 → カラー選択）と、その後の書き出し */
+/** 編集（投稿情報 → 作品の登録 → カラー選択）と、その後の書き出し */
 export function EditScreen({ project, template, step, onStepChange, onChange, onReset }: EditScreenProps) {
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
   // 開くたびにテンプレート設定を最初のステップから始める（閉じるアニメーション中は中身を変えない）
@@ -65,7 +65,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
         }}
       />
       <main className={styles.main}>
-        {step < EXPORT_STEP && <Stepbar steps={EDIT_STEPS} current={step} lineWidth={60} gap={7} />}
+        {step < EXPORT_STEP && <Stepbar steps={EDIT_STEPS} current={step} width={304} gap={7} onStepClick={goTo} />}
         {step === 0 ? (
           <PostInfoStep project={project} template={template} onChange={onChange} onNext={() => goTo(1)} />
         ) : step === 1 ? (

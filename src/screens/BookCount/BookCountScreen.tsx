@@ -65,7 +65,7 @@ export function BookCountScreen({
       />
       <main className={`${styles.main} ${changeLabel ? styles.mainChange : ''}`}>
         {changeLabel && <p className={styles.current}>{changeLabel}</p>}
-        <Stepbar steps={TEMPLATE_SETTINGS_STEPS} current={1} />
+        <Stepbar steps={TEMPLATE_SETTINGS_STEPS} current={1} onStepClick={onBack} />
         {selected === null ? (
           <section className={styles.content} aria-labelledby="book-count-heading">
             <div className={`${styles.heading} ${collapsedFrom !== null ? styles.fadeIn : ''}`}>

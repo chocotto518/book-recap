@@ -7,6 +7,20 @@
   list-style: none;
 }
 
+.fixedWidth {
+  justify-content: space-between;
+}
+
+/* 全体の幅を固定するときは、線が残りの幅を等分する */
+.fixedWidth .line,
+.fixedWidth .lineFilled {
+  flex: 1 1 0;
+}
+
+.item {
+  display: flex;
+}
+
 .step {
   display: flex;
   flex-direction: column;
@@ -79,4 +93,27 @@
 
 .lineFilled {
   background: var(--color-primary-700);
+}
+
+/* 終わったステップはボタン（見た目は変えず、押せる範囲を少し広げる） */
+.stepButton {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.stepButton::after {
+  position: absolute;
+  inset: -6px -8px;
+  content: '';
+}
+
+.stepButton:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 4px;
 }
