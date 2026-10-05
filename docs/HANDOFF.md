@@ -1,7 +1,7 @@
 # 引き継ぎメモ（現状と残タスク）
 
 新しい会話で作業を再開するときは、まず `CLAUDE.md`（仕様・ルール）とこのファイル（進み具合・残タスク）を読む。
-最終更新：2026-10-05（グリッド型の作品の登録の並べ方まで main にマージ済み）
+最終更新：2026-10-05（リセットの確認モーダル（キャラクターのアニメーション付き）まで main にマージ済み）
 
 ## 1. 進め方の約束（ユーザーとの合意）
 
@@ -11,7 +11,7 @@
 - **前の会話では「マージちょっと待って」と言われるまで、確認なしで PR 作成・マージしてよい**という合意だった。新しい会話では引き継がれないので、最初にユーザーに確認する
 - 作業のたびに `docs/HANDOFF.md`（と必要なら `CLAUDE.md`）も更新して同じ PR に入れる（ユーザーの希望）
 - 返答は日本語。専門用語は避け、結論 → 変えたこと → 決めたこと／確認したいこと の順で短く
-- 確認ダイアログはまだブラウザ標準（`window.confirm` / `alert`）でよいと言われている（デザインは後日）
+- 確認ダイアログは、デザインをもらったものから差し替える。まだのもの（テンプレート変更の確認・画像エラー）はブラウザ標準（`window.confirm` / `alert`）のままでよい
 
 ## 2. 環境まわりの注意
 
@@ -34,6 +34,7 @@
 | ヘッダーのプレビュー（目のアイコン、中央ポップアップ） | 済 | `screens/Edit/PreviewContent.tsx` |
 | ヘッダーの 3 点リーダーのメニュー（テンプレート変更・リセット） | 済 | `components/Header`、`components/EditMenu` |
 | テンプレート変更（右からスライドイン、現在の設定、選択状態） | 済 | `features/TemplateSettingsFlow.tsx`（`change`） |
+| リセットの確認モーダル（335×344、キャラクターの Lottie アニメ、はい／いいえ） | 済 | `components/ConfirmDialog`、`components/LottiePlayer`、`assets/lottie/reset-character.json` |
 | ステップバー（終わったステップをタップで戻る） | 済 | `components/Stepbar` |
 | 出力画像の描画（canvas、1080×1440） | 済 | `render/`（`layout.ts`・`colors.ts`・`renderRecap.ts`・`text.ts`） |
 | 入力内容の保存（localStorage、書影は別キー） | 済 | `state/usePersistentState.ts`、`state/covers.ts` |
@@ -43,11 +44,10 @@
 優先度はユーザー未確認。上から順にやりそうなもの。
 
 1. **確認・エラーのダイアログのデザイン**（ユーザーがデザイン予定）
-   - 今はブラウザ標準。差し替える場所は 3 か所
-     - リセットの確認：`screens/Edit/EditScreen.tsx` の `reset`
+   - リセットの確認は差し替え済み（`components/ConfirmDialog`）。残りの 2 か所はまだブラウザ標準
      - テンプレート変更で本・感想が消えるときの確認：`screens/Edit/EditScreen.tsx`（`planTemplateChange` の `warnings` を表示）
      - 書影の画像を読み込めないとき：`components/BookEditDialog/BookEditDialog.tsx` の `alert`
-   - 中央ポップアップの土台は `components/Dialog`（入力モーダルで使用中）がそのまま使える
+   - 同じ見た目でよければ `ConfirmDialog`（`message`・`confirmLabel`・`cancelLabel`）をそのまま使える。キャラクターは今は固定（リセット用の JSON）
 2. **書誌情報・書影の自動入力**（ネット検索・ISBN）
    - 入力モーダルに入口を足す想定。CORS で読める取得元を使うこと（読めない画像を canvas に描くと書き出しが失敗する）。候補の取得元は未調査
 3. **X の投稿文**：今はテーマだけ。ハッシュタグやアプリ URL を入れるかは未定（ユーザーは「今はこのまま」）
@@ -68,6 +68,9 @@
 - カラーの「デフォルト」は黒（#000）。カラー別の背景色・アクセント色は `render/colors.ts`
 - 押せないボタン：塗りはグレー #999、枠線は半透明
 - タップ領域は最低 44px（見た目は Figma のまま、押せる範囲だけ広げる）
+- サイズ M のボタン（保存する／キャンセル、はい／いいえなど）は高さ 44px ちょうど（枠線ぶん 45px になっていたのを直した）
+- Lottie は `lottie-web` の軽量版（`lottie_light`、SVG 描画）。モーダルを開いたときに初めて読み込む（約 50KB）。ループ再生、動きを減らす設定の端末では止めて表示
+- リセットのキャラクターの外枠（黒 1px）は JSON に入っているもの。デザインの見た目に合わせてそのまま使っている
 
 ## 6. コードの地図
 
@@ -80,6 +83,7 @@ src/
   state/covers.ts             書影の保存・読み込み・縮小
   state/usePersistentState.ts localStorage つき useState
   render/                     出力画像の描画（プレビューと書き出しで共通）
+  assets/lottie/              Lottie アニメーションの JSON
   features/TemplateSettingsFlow.tsx  テンプレート設定の 2 ステップ（最初の流れ／テンプレート変更）
   screens/                    各画面
   components/                 共通部品（Header・Stepbar・Button・Modal・Dialog・TextField など）

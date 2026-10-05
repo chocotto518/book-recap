@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ConfirmDialog } from '../../components/ConfirmDialog/ConfirmDialog';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { EditMenu } from '../../components/EditMenu/EditMenu';
 import { Header } from '../../components/Header/Header';
@@ -31,6 +32,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
   const [templateModalKey, setTemplateModalKey] = useState(0);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
 
   const goTo = (next: number) => {
     setMenuOpen(false);
@@ -45,9 +47,8 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
   };
 
   const reset = () => {
-    if (!window.confirm('入力した内容（テーマ・ユーザー名・登録した本・カラー）をすべて消して、最初からやり直しますか？')) return;
     setMenuOpen(false);
-    onReset();
+    setResetConfirmOpen(true);
   };
 
   return (
@@ -109,6 +110,16 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
       <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)} label={PREVIEW_TITLE}>
         <PreviewContent project={project} template={template} onClose={() => setPreviewOpen(false)} />
       </Dialog>
+
+      <ConfirmDialog
+        open={resetConfirmOpen}
+        message={'入力した内容をすべて消して\n最初からやり直しますか？'}
+        onCancel={() => setResetConfirmOpen(false)}
+        onConfirm={() => {
+          setResetConfirmOpen(false);
+          onReset();
+        }}
+      />
     </div>
   );
 }
