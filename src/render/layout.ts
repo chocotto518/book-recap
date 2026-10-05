@@ -11,9 +11,13 @@ export const CANVAS = { width: 1080, height: 1440 };
 
 export const FONT_FAMILY = '"IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", sans-serif';
 
+/** テーマ・ユーザー名に付く罫線の太さ（すべてのテンプレート共通） */
+export const RULE_WIDTH = 2;
+
 export const TEXT = {
-  header: { size: 24, weight: 500, centerY: 58, lineY: 59, gap: 24 },
-  footer: { size: 16, weight: 400, centerY: 1379, lineY: 1379, gap: 24 },
+  /** lineY は罫線の上端。罫線の太さは RULE_WIDTH */
+  header: { size: 24, weight: 500, centerY: 58, lineY: 58, gap: 24 },
+  footer: { size: 16, weight: 400, centerY: 1379, lineY: 1378, gap: 24 },
   copyright: {
     size: 11,
     weight: 400,

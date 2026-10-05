@@ -2,7 +2,7 @@ import { COMMENT_MAX_LENGTH } from '../constants/template';
 import { getCover } from '../state/covers';
 import { coverPlaceholder, isBookFilled, type Book, type Template } from '../state/project';
 import { AUTHOR_COLOR, COPYRIGHT_COLOR, type Palette } from './colors';
-import { CANVAS, coversFor, FONT_FAMILY, GRID_TEXT, LIST_TEXT, TEXT, type Rect } from './layout';
+import { CANVAS, coversFor, FONT_FAMILY, GRID_TEXT, LIST_TEXT, RULE_WIDTH, TEXT, type Rect } from './layout';
 import { ellipsize, wrapText } from './text';
 
 export type RecapInput = {
@@ -96,8 +96,8 @@ function drawRuledText(
   if (!withLines) return;
   const left = CANVAS.width / 2 - width / 2 - style.gap;
   const right = CANVAS.width / 2 + width / 2 + style.gap;
-  ctx.fillRect(0, style.lineY, left, 1);
-  ctx.fillRect(right, style.lineY, CANVAS.width - right, 1);
+  ctx.fillRect(0, style.lineY, left, RULE_WIDTH);
+  ctx.fillRect(right, style.lineY, CANVAS.width - right, RULE_WIDTH);
 }
 
 /**
@@ -113,7 +113,7 @@ function drawHeaderFooter(ctx: CanvasRenderingContext2D, theme: string, userName
   if (userName) drawRuledText(ctx, userName, TEXT.footer, palette.accent, Boolean(theme));
   else if (theme) {
     ctx.fillStyle = palette.accent;
-    ctx.fillRect(0, TEXT.footer.lineY, CANVAS.width, 1);
+    ctx.fillRect(0, TEXT.footer.lineY, CANVAS.width, RULE_WIDTH);
   }
   ctx.fillStyle = COPYRIGHT_COLOR;
   ctx.font = font(TEXT.copyright);
