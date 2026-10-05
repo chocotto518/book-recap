@@ -14,7 +14,7 @@ type RegisterBooksStepProps = {
   onNext: () => void;
 };
 
-/** 編集 step2：本の登録。テンプレートの形（リスト型／グリッド型）に合わせて枠を並べる */
+/** 編集 step2：作品の登録。テンプレートの形（リスト型／グリッド型）に合わせて枠を並べる */
 export function RegisterBooksStep({ template, books, onBooksChange, onNext }: RegisterBooksStepProps) {
   const [editing, setEditing] = useState<number | null>(null);
   // 閉じるアニメーション中も中身を出しておくため、最後に開いた枠を覚えておく
@@ -29,7 +29,7 @@ export function RegisterBooksStep({ template, books, onBooksChange, onNext }: Re
 
   return (
     <>
-      <section className={styles.section} aria-label="本の登録">
+      <section className={styles.section} aria-label="作品の登録">
         <p className={styles.hint}>
           タップで変更
           <br />

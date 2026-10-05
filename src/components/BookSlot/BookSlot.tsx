@@ -14,7 +14,7 @@ type BookSlotProps = Omit<HTMLAttributes<HTMLButtonElement>, 'onClick'> & {
   'data-dragging'?: boolean;
 };
 
-/** 本の登録画面の 1 枠。タップで入力モーダルを開く */
+/** 作品の登録画面の 1 枠。タップで入力モーダルを開く */
 export function BookSlot({ book, index, variant, onOpen, className, ...rest }: BookSlotProps) {
   const cover = useCover(book.coverId);
   const filled = isBookFilled(book);
@@ -25,7 +25,7 @@ export function BookSlot({ book, index, variant, onOpen, className, ...rest }: B
       type="button"
       className={`${isList ? styles.list : styles.grid} ${className ?? ''}`}
       onClick={onOpen}
-      aria-label={`${index + 1}冊目${book.title ? `：${book.title}` : ''}を${filled ? '編集' : '記入'}する`}
+      aria-label={`${index + 1}冊目${book.title ? `：${book.title}` : ''}を${filled ? '編集' : '登録'}する`}
       {...rest}
     >
       {isList ? (
@@ -46,7 +46,7 @@ export function BookSlot({ book, index, variant, onOpen, className, ...rest }: B
         <span className={styles.author}>{book.author || '作者'}</span>
         {isList && <span className={styles.comment}>{book.comment || '感想'}</span>}
       </span>
-      <span className={styles.action}>{filled ? '編集する' : '+ 記入する'}</span>
+      <span className={styles.action}>{filled ? '編集する' : '+ 登録する'}</span>
     </button>
   );
 }
