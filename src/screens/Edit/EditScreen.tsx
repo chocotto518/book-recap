@@ -5,9 +5,16 @@ import { EditMenu } from '../../components/EditMenu/EditMenu';
 import { Header } from '../../components/Header/Header';
 import { Modal } from '../../components/Modal/Modal';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
-import { EDIT_STEPS, EDIT_TITLE, EXPORT_STEP, EXPORT_TITLE, PREVIEW_TITLE, TEMPLATE_CHANGE_TITLE } from '../../constants/flow';
+import {
+  EDIT_STEPS,
+  EDIT_TITLE,
+  EXPORT_STEP,
+  EXPORT_TITLE,
+  PREVIEW_TITLE,
+  TEMPLATE_CHANGE_TITLE,
+} from '../../constants/flow';
 import { TemplateSettingsFlow } from '../../features/TemplateSettingsFlow';
-import { planTemplateChange, type Project, type Template } from '../../state/project';
+import { planTemplateChange, type Book, type Project, type Template } from '../../state/project';
 import { PreviewContent } from './PreviewContent';
 import { PostInfoStep } from './PostInfoStep';
 import { RegisterBooksStep } from './RegisterBooksStep';
@@ -33,6 +40,13 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
   const [previewOpen, setPreviewOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  // テンプレート変更で消える内容があるときの確認待ち（閉じるアニメーション中も文を残す）
+  const [pendingChange, setPendingChange] = useState<{
+    template: Template;
+    books: Book[];
+    warnings: string[];
+  } | null>(null);
+  const [changeConfirmOpen, setChangeConfirmOpen] = useState(false);
 
   const goTo = (next: number) => {
     setMenuOpen(false);
@@ -97,10 +111,17 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
       >
         <TemplateSettingsFlow
           key={templateModalKey}
-          change={{ current: template, onCancel: () => setTemplateModalOpen(false) }}
+          change={{
+            current: template,
+            onCancel: () => setTemplateModalOpen(false),
+          }}
           onConfirm={(next) => {
             const { books, warnings } = planTemplateChange(project.books, next);
-            if (warnings.length && !window.confirm(`${warnings.join('\n')}\nテンプレートを変更しますか？`)) return;
+            if (warnings.length) {
+              setPendingChange({ template: next, books, warnings });
+              setChangeConfirmOpen(true);
+              return;
+            }
             onChange({ template: next, books });
             setTemplateModalOpen(false);
           }}
@@ -114,10 +135,26 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
       <ConfirmDialog
         open={resetConfirmOpen}
         message={'入力した内容をすべて消して\n最初からやり直しますか？'}
+        character
         onCancel={() => setResetConfirmOpen(false)}
         onConfirm={() => {
           setResetConfirmOpen(false);
           onReset();
+        }}
+      />
+
+      <ConfirmDialog
+        open={changeConfirmOpen}
+        message={`${pendingChange?.warnings.join('\n') ?? ''}\n変更しますか？`}
+        onCancel={() => setChangeConfirmOpen(false)}
+        onConfirm={() => {
+          setChangeConfirmOpen(false);
+          if (!pendingChange) return;
+          onChange({
+            template: pendingChange.template,
+            books: pendingChange.books,
+          });
+          setTemplateModalOpen(false);
         }}
       />
     </div>

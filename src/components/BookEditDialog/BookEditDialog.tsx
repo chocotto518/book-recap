@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { BookNumber } from '../BookNumber/BookNumber';
 import { Button } from '../Button/Button';
+import { ConfirmDialog } from '../ConfirmDialog/ConfirmDialog';
 import { Dialog } from '../Dialog/Dialog';
 import { TextField } from '../TextField/TextField';
 import { readCoverFile, saveCover, useCover } from '../../state/covers';
@@ -31,6 +32,7 @@ export function BookEditDialog(props: BookEditDialogProps) {
 function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, onSave }: BookEditDialogProps) {
   const [draft, setDraft] = useState(book);
   const [loadingCover, setLoadingCover] = useState(false);
+  const [coverError, setCoverError] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const cover = useCover(draft.coverId);
   const commentTooLong = withComment && commentMaxLength !== undefined && [...draft.comment].length > commentMaxLength;
@@ -42,77 +44,89 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
       const coverId = saveCover(await readCoverFile(file));
       setDraft((d) => ({ ...d, coverId }));
     } catch {
-      alert('画像を読み込めませんでした。別の画像を選んでください。');
+      setCoverError(true);
     } finally {
       setLoadingCover(false);
     }
   };
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (!commentTooLong) onSave(draft);
-      }}
-    >
-      <div className={styles.body}>
-        <span className={styles.number}>
-          <BookNumber value={index + 1} />
-        </span>
-        <button
-          type="button"
-          className={styles.coverButton}
-          onClick={() => fileRef.current?.click()}
-          aria-label={cover ? '書影の画像を変更する' : '書影の画像を選ぶ'}
-          disabled={loadingCover}
-        >
-          <img className={cover ? styles.coverImage : styles.coverPlaceholder} src={cover ?? coverPlaceholder} alt="" />
-          {!cover && <span className={styles.coverHint}>{loadingCover ? '読み込み中…' : 'タップで画像を選択'}</span>}
-        </button>
-        <input
-          ref={fileRef}
-          className={styles.file}
-          type="file"
-          accept="image/*"
-          tabIndex={-1}
-          onChange={(e) => {
-            void pickCover(e.target.files?.[0]);
-            e.target.value = '';
-          }}
-        />
-        <TextField
-          label="本のタイトル"
-          value={draft.title}
-          placeholder="こころ"
-          onChange={(title) => setDraft((d) => ({ ...d, title }))}
-        />
-        <TextField
-          label="作者"
-          value={draft.author}
-          placeholder="夏目漱石"
-          onChange={(author) => setDraft((d) => ({ ...d, author }))}
-        />
-        {withComment && (
-          <TextField
-            label="感想"
-            value={draft.comment}
-            placeholder="おもしろかった！"
-            multiline
-            maxLength={commentMaxLength}
-            showCount
-            onChange={(comment) => setDraft((d) => ({ ...d, comment }))}
+    <>
+      <form
+        className={styles.form}
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!commentTooLong) onSave(draft);
+        }}
+      >
+        <div className={styles.body}>
+          <span className={styles.number}>
+            <BookNumber value={index + 1} />
+          </span>
+          <button
+            type="button"
+            className={styles.coverButton}
+            onClick={() => fileRef.current?.click()}
+            aria-label={cover ? '書影の画像を変更する' : '書影の画像を選ぶ'}
+            disabled={loadingCover}
+          >
+            <img
+              className={cover ? styles.coverImage : styles.coverPlaceholder}
+              src={cover ?? coverPlaceholder}
+              alt=""
+            />
+            {!cover && <span className={styles.coverHint}>{loadingCover ? '読み込み中…' : 'タップで画像を選択'}</span>}
+          </button>
+          <input
+            ref={fileRef}
+            className={styles.file}
+            type="file"
+            accept="image/*"
+            tabIndex={-1}
+            onChange={(e) => {
+              void pickCover(e.target.files?.[0]);
+              e.target.value = '';
+            }}
           />
-        )}
-      </div>
-      <div className={styles.actions}>
-        <Button variant="outline" size="M" onClick={onCancel}>
-          キャンセル
-        </Button>
-        <Button type="submit" size="M" disabled={commentTooLong || loadingCover}>
-          保存する
-        </Button>
-      </div>
-    </form>
+          <TextField
+            label="本のタイトル"
+            value={draft.title}
+            placeholder="こころ"
+            onChange={(title) => setDraft((d) => ({ ...d, title }))}
+          />
+          <TextField
+            label="作者"
+            value={draft.author}
+            placeholder="夏目漱石"
+            onChange={(author) => setDraft((d) => ({ ...d, author }))}
+          />
+          {withComment && (
+            <TextField
+              label="感想"
+              value={draft.comment}
+              placeholder="おもしろかった！"
+              multiline
+              maxLength={commentMaxLength}
+              showCount
+              onChange={(comment) => setDraft((d) => ({ ...d, comment }))}
+            />
+          )}
+        </div>
+        <div className={styles.actions}>
+          <Button variant="outline" size="M" onClick={onCancel}>
+            キャンセル
+          </Button>
+          <Button type="submit" size="M" disabled={commentTooLong || loadingCover}>
+            保存する
+          </Button>
+        </div>
+      </form>
+      <ConfirmDialog
+        open={coverError}
+        message={'画像を読み込めませんでした。\n別の画像を選んでください。'}
+        confirmLabel="閉じる"
+        onConfirm={() => setCoverError(false)}
+      />
+    </>
   );
 }

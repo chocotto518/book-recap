@@ -84,8 +84,8 @@ export function planTemplateChange(books: Book[], next: Template) {
     return { ...book, comment: chars.slice(0, limit).join('') };
   });
   const warnings: string[] = [];
-  if (removedBooks) warnings.push(`${next.count + 1}冊目以降に登録した本（${removedBooks}冊）は削除されます。`);
-  if (clearedComments) warnings.push(`感想なしのテンプレートになるため、登録した感想（${clearedComments}冊分）は削除されます。`);
-  if (truncatedComments) warnings.push(`感想が${limit}字を超えている本（${truncatedComments}冊）は、${limit}字を超えた部分が削除されます。`);
+  if (removedBooks) warnings.push(`${next.count + 1}冊目以降の本（${removedBooks}冊）は削除されます。`);
+  if (clearedComments) warnings.push(`登録した感想（${clearedComments}冊分）は削除されます。`);
+  if (truncatedComments) warnings.push(`感想の${limit}字を超えた部分（${truncatedComments}冊分）は削除されます。`);
   return { books: nextBooks, warnings };
 }
