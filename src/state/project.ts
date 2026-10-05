@@ -84,8 +84,10 @@ export function planTemplateChange(books: Book[], next: Template) {
     return { ...book, comment: chars.slice(0, limit).join('') };
   });
   const warnings: string[] = [];
-  if (removedBooks) warnings.push(`${next.count + 1}冊目以降の本（${removedBooks}冊）は削除されます。`);
-  if (clearedComments) warnings.push(`登録した感想（${clearedComments}冊分）は削除されます。`);
-  if (truncatedComments) warnings.push(`感想の${limit}字を超えた部分（${truncatedComments}冊分）は削除されます。`);
+  // 本の削除と感想の切り詰めは同時に起きない（冊数が減ると感想の上限は増える）
+  if (removedBooks && clearedComments) warnings.push(`${next.count + 1}冊目以降の本と登録した感想は削除されます。`);
+  else if (removedBooks) warnings.push(`${next.count + 1}冊目以降の本は削除されます。`);
+  else if (clearedComments) warnings.push('登録した感想は削除されます。');
+  if (truncatedComments) warnings.push(`感想の${limit}字を超えた部分は削除されます。`);
   return { books: nextBooks, warnings };
 }
