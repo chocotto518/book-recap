@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react';
 import { BookNumber } from '../BookNumber/BookNumber';
+import { BookSearch } from '../BookSearch/BookSearch';
 import { Button } from '../Button/Button';
 import { ConfirmDialog } from '../ConfirmDialog/ConfirmDialog';
 import { Dialog } from '../Dialog/Dialog';
 import { TextField } from '../TextField/TextField';
 import { readCoverFile, saveCover, useCover } from '../../state/covers';
+import { bookSearchAvailable } from '../../lib/bookSearch';
 import { coverPlaceholder, type Book } from '../../state/project';
 import styles from './BookEditDialog.module.css';
 
@@ -88,6 +90,9 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
               e.target.value = '';
             }}
           />
+          {bookSearchAvailable() && (
+            <BookSearch onSelect={({ title, author }) => setDraft((d) => ({ ...d, title, author }))} />
+          )}
           <TextField
             label="本のタイトル"
             value={draft.title}
