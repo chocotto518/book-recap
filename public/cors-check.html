@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>書影の取得テスト（一時的な確認用）</title>
+<style>
+  body { margin: 0; padding: 16px; font: 14px/1.6 system-ui, sans-serif; background: #faf8f5; color: #000; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  h2 { font-size: 15px; margin: 24px 0 8px; }
+  p { margin: 0 0 8px; color: #666; }
+  table { width: 100%; border-collapse: collapse; background: #fff; }
+  td { padding: 6px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+  td.r { width: 40px; text-align: center; font-weight: 700; }
+  img { width: 40px; height: 56px; object-fit: contain; background: #eee; display: block; }
+  .ok { color: #1a7f37; } .ng { color: #bc2626; }
+  textarea { width: 100%; height: 160px; box-sizing: border-box; font: 12px monospace; }
+  button { padding: 10px 16px; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>書影の取得テスト</h1>
+<p>book-recap の自動入力の確認用の一時ページです。開くと自動でテストします。終わったら下の結果をコピーして送ってください。</p>
+
+<h2>1. 書影を書き出しに描き込めるか</h2>
+<p>○＝描き込める／×＝表示はできても描き込めない、または画像がない</p>
+<table id="images"></table>
+
+<h2>2. 本の情報を取れるか</h2>
+<table id="data"></table>
+
+<h2>結果（コピーして送ってください）</h2>
+<textarea id="out" readonly></textarea>
+<p><button id="copy">結果をコピー</button></p>
+
+<script>
+const log = [];
+const ua = navigator.userAgent;
+log.push('UA: ' + ua);
+
+const IMAGES = [
+  ['国会図書館 吾輩は猫である', 'https://ndlsearch.ndl.go.jp/thumbnail/9784101010014.jpg'],
+  ['国会図書館 ONE PIECE 1', 'https://ndlsearch.ndl.go.jp/thumbnail/9784088725093.jpg'],
+  ['国会図書館 君の名は。', 'https://ndlsearch.ndl.go.jp/thumbnail/9784041026229.jpg'],
+  ['国会図書館 翳りゆく午後(2024)', 'https://ndlsearch.ndl.go.jp/thumbnail/9784087718881.jpg'],
+  ['openBD 書影', 'https://cover.openbd.jp/9784088725093.jpg'],
+  ['楽天 書影', 'https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/0014/9784101010014.jpg'],
+  ['Google 書影', 'https://books.google.com/books/content?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1'],
+];
+
+function row(table, cells) {
+  const tr = document.createElement('tr');
+  cells.forEach((c) => { const td = document.createElement('td'); if (c instanceof Node) td.append(c); else td.textContent = c; tr.append(td); });
+  document.getElementById(table).append(tr);
+  return tr;
+}
+
+function testImage([label, url]) {
+  return new Promise((resolve) => {
+    // 表示できるか（CORS なし）
+    const plain = new Image();
+    const shown = new Promise((r) => { plain.onload = () => r(plain.naturalWidth > 1 ? `表示可 ${plain.naturalWidth}x${plain.naturalHeight}` : '画像なし(1px)'); plain.onerror = () => r('表示不可'); });
+    plain.src = url;
+    // 描き込めるか（CORS あり + canvas 書き出し）
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0); c.toDataURL();
+        shown.then((s) => resolve([label, img.naturalWidth > 1 ? '○' : '×', s, plain]));
+      } catch (e) { shown.then((s) => resolve([label, '×', s + ' / 書き出し不可', plain])); }
+    };
+    img.onerror = () => shown.then((s) => resolve([label, '×', s + ' / CORS 不可', plain]));
+    img.src = url + (url.includes('?') ? '&' : '?') + 'cors=1';
+  });
+}
+
+async function testData(label, url, parse) {
+  try {
+    const res = await fetch(url);
+    const body = await res.text();
+    if (!res.ok) return [label, '×', `HTTP ${res.status}`];
+    return [label, '○', parse(body)];
+  } catch (e) { return [label, '×', '取得不可 ' + e.message]; }
+}
+
+(async () => {
+  for (const t of IMAGES) {
+    const [label, r, note, img] = await testImage(t);
+    const tr = row('images', [r, img, label + '：' + note]);
+    tr.firstChild.className = 'r ' + (r === '○' ? 'ok' : 'ng');
+    log.push(`[画像] ${r} ${label}：${note}`);
+  }
+  const tests = [
+    ['openBD（ISBN）', 'https://api.openbd.jp/v1/get?isbn=9784088725093', (b) => { const j = JSON.parse(b)[0]; return j ? `${j.summary.title}／${j.summary.author}／書影:${j.summary.cover || 'なし'}` : '該当なし'; }],
+    ['国会図書館（書名で検索）', 'https://ndlsearch.ndl.go.jp/api/opensearch?title=' + encodeURIComponent('君の名は') + '&cnt=3', (b) => { const d = new DOMParser().parseFromString(b, 'text/xml'); const items = [...d.querySelectorAll('item')]; return `${items.length}件：` + items.map((i) => i.querySelector('title')?.textContent).join('、'); }],
+  ];
+  for (const [label, url, parse] of tests) {
+    const [l, r, note] = await testData(label, url, parse);
+    const tr = row('data', [r, l + '：' + note]);
+    tr.firstChild.className = 'r ' + (r === '○' ? 'ok' : 'ng');
+    log.push(`[情報] ${r} ${l}：${note}`);
+  }
+  document.getElementById('out').value = log.join('\n');
+})();
+
+document.getElementById('copy').onclick = async () => {
+  const t = document.getElementById('out');
+  try { await navigator.clipboard.writeText(t.value); } catch { t.select(); document.execCommand('copy'); }
+  document.getElementById('copy').textContent = 'コピーしました';
+};
+</script>
+</body>
+</html>
