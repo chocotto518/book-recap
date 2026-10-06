@@ -1,0 +1,119 @@
+/* 仮デザイン：入力欄（TextField）と同じ見た目に、右に「検索」ボタン、下に候補の一覧 */
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.label {
+  padding: 0 2px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16.8px;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* 16px 未満だと iOS で入力時に拡大されるため 16px を保つ */
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.2px;
+}
+
+.input::placeholder {
+  color: var(--color-placeholder);
+}
+
+.input:focus {
+  border-color: var(--color-primary-700);
+  outline: none;
+}
+
+.button {
+  flex: none;
+  width: 72px;
+}
+
+.message {
+  margin: var(--space-1) 0 0;
+  color: var(--color-sub-text);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.results {
+  max-height: 260px;
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  list-style: none;
+}
+
+.results li + li {
+  border-top: 1px solid var(--color-primary-100);
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.result:active {
+  background: var(--color-bg);
+}
+
+.result:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: -2px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.meta {
+  color: var(--color-sub-text);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.credit {
+  align-self: flex-end;
+  color: var(--color-sub-text);
+  font-size: 10px;
+  line-height: 14px;
+}
+
+/* Chrome の検索欄に出る青い「×」は見た目が浮くので出さない */
+.input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
