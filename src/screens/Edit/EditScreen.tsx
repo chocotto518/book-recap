@@ -99,7 +99,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
             onConfirm={() => goTo(EXPORT_STEP)}
           />
         ) : (
-          <ExportStep project={project} template={template} />
+          <ExportStep project={project} template={template} onCreateAnother={onReset} />
         )}
       </main>
 

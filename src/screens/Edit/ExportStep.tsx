@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../components/Button/Button';
-import { Toast } from '../../components/Toast/Toast';
+import { SaveDoneDialog } from '../../components/SaveDoneDialog/SaveDoneDialog';
 import { paletteOf } from '../../render/colors';
 import { canShareImage, createRecapPng, downloadFile, openXIntent, shareFile } from '../../render/exportImage';
 import type { Project, Template } from '../../state/project';
@@ -9,13 +9,15 @@ import styles from './ExportStep.module.css';
 type ExportStepProps = {
   project: Project;
   template: Template;
+  /** 保存後の「もう1枚作る」：入力内容を消して最初（テンプレート設定）から */
+  onCreateAnother: () => void;
 };
 
 /**
  * 書き出し。表示している画像は、保存・共有する PNG そのもの。
  * 共有シートは「タップした瞬間」に呼ばないと開けない端末があるため、PNG は画面を開いた時点で作っておく
  */
-export function ExportStep({ project, template }: ExportStepProps) {
+export function ExportStep({ project, template, onCreateAnother }: ExportStepProps) {
   const [file, setFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [error, setError] = useState(false);
@@ -91,7 +93,14 @@ export function ExportStep({ project, template }: ExportStepProps) {
           Xで共有
         </Button>
       </div>
-      <Toast message={saved ? '端末に保存しました' : null} onHide={() => setSaved(false)} />
+      <SaveDoneDialog
+        open={saved}
+        onClose={() => setSaved(false)}
+        onCreateAnother={() => {
+          setSaved(false);
+          onCreateAnother();
+        }}
+      />
     </section>
   );
 }

@@ -1,0 +1,30 @@
+/*
+ * デザイン準拠：335×364。上 16・左右 16・下 24 の余白
+ * 見出し（行の高さ 24）の直下にアニメーション（287×196、左寄せ）、その直下にボタン 2 つ（間 16）。
+ * アニメーションの上下の余白は Lottie の中に含まれている
+ */
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-4) var(--space-6);
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+}
+
+/* 本のカードは Lottie の枠（287px）の右にもはみ出して流れるので、余白の内側（303px）で切る */
+.animation {
+  height: 196px;
+  overflow: hidden;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
