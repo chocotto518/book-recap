@@ -13,7 +13,7 @@ type PreviewContentProps = {
 
 /**
  * プレビューのポップアップの中身（作品の登録の入力モーダルと同じ形）。
- * 書き出す画像と同じ描画で、今の入力内容を表示する。まだ入力していない本などは見本の文字で表示
+ * 書き出す画像と同じ描画で、今の入力内容を表示する。まだ入力していない本などは書き出しと同じく空白
  */
 export function PreviewContent({ project, template, onClose }: PreviewContentProps) {
   return (
@@ -27,7 +27,7 @@ export function PreviewContent({ project, template, onClose }: PreviewContentPro
           theme: project.theme,
           userName: project.userName,
           books: project.books,
-          fillEmpty: true,
+          fillEmpty: false,
         }}
       />
       <Button size="M" className={styles.close} onClick={onClose}>

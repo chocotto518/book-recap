@@ -48,7 +48,7 @@ export function ColorStep({ project, template, onColorChange, onConfirm }: Color
                   theme: project.theme,
                   userName: project.userName,
                   books: project.books,
-                  fillEmpty: true,
+                  fillEmpty: false,
                 }}
               />
             </span>
