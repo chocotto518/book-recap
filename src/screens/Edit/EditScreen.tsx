@@ -136,6 +136,8 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
         open={resetConfirmOpen}
         message={'入力した内容をすべて消して\n最初からやり直しますか？'}
         character
+        confirmLabel="やり直す"
+        cancelLabel="キャンセル"
         onCancel={() => setResetConfirmOpen(false)}
         onConfirm={() => {
           setResetConfirmOpen(false);
@@ -146,6 +148,8 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
       <ConfirmDialog
         open={changeConfirmOpen}
         message={`${pendingChange?.warnings.join('\n') ?? ''}\n変更しますか？`}
+        confirmLabel="変更する"
+        cancelLabel="キャンセル"
         onCancel={() => setChangeConfirmOpen(false)}
         onConfirm={() => {
           setChangeConfirmOpen(false);
