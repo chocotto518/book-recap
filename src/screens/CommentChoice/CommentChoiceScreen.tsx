@@ -44,7 +44,7 @@ export function CommentChoiceScreen({ onSelect, onBack, change, initialHasCommen
         <section className={styles.content} aria-labelledby="comment-choice-heading">
           <div className={styles.heading}>
             <h2 id="comment-choice-heading" className={styles.question}>
-              あなたの感想を書きますか？
+              感想を書きますか？
             </h2>
             <p className={styles.hint}>タップで選択</p>
           </div>
