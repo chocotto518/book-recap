@@ -147,7 +147,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
 
       <ConfirmDialog
         open={changeConfirmOpen}
-        message={`${pendingChange?.warnings.join('\n') ?? ''}\n変更しますか？`}
+        message={`${pendingChange?.warnings.join('\n') ?? ''}\nテンプレートを変更しますか？`}
         confirmLabel="変更する"
         cancelLabel="キャンセル"
         onCancel={() => setChangeConfirmOpen(false)}
