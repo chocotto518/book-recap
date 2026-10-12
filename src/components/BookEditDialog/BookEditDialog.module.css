@@ -71,3 +71,10 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
+
+/* 仮デザイン：書影の下の「画像を貼り付け」 */
+.pasteButton {
+  width: auto;
+  min-width: 160px;
+  padding-inline: var(--space-4);
+}

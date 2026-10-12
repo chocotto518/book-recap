@@ -61,7 +61,7 @@ export function useCover(id: string | null): string | null {
 }
 
 /** 端末から選んだ画像を、書き出しに十分な大きさ（長辺 900px）の JPEG に縮めて data URL にする */
-export async function readCoverFile(file: File, maxSize = 900): Promise<string> {
+export async function readCoverFile(file: Blob, maxSize = 900): Promise<string> {
   const url = URL.createObjectURL(file);
   try {
     const img = new Image();
