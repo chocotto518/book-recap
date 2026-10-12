@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BookNumber } from '../BookNumber/BookNumber';
 import { BookSearch } from '../BookSearch/BookSearch';
 import { Button } from '../Button/Button';
@@ -21,6 +21,12 @@ type BookEditDialogProps = {
   onSave: (book: Book) => void;
 };
 
+const COVER_UNREADABLE = '画像を読み込めませんでした。\n別の画像を選んでください。';
+const NO_IMAGE_IN_CLIPBOARD = '画像がコピーされていません。\n画像をコピーしてから貼り付けてください。';
+
+/** コピーしてある画像をボタンから読み取れるブラウザか */
+const canPasteImage = () => typeof navigator !== 'undefined' && typeof navigator.clipboard?.read === 'function';
+
 /** 1 冊ぶんの情報を入力するモーダル。「保存する」を押すまで一覧には反映しない */
 export function BookEditDialog(props: BookEditDialogProps) {
   return (
@@ -34,21 +40,50 @@ export function BookEditDialog(props: BookEditDialogProps) {
 function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, onSave }: BookEditDialogProps) {
   const [draft, setDraft] = useState(book);
   const [loadingCover, setLoadingCover] = useState(false);
-  const [coverError, setCoverError] = useState(false);
+  /** 書影を入れられなかったときに出すお知らせ（null なら出さない） */
+  const [coverError, setCoverError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const cover = useCover(draft.coverId);
   const commentTooLong = withComment && commentMaxLength !== undefined && [...draft.comment].length > commentMaxLength;
 
-  const pickCover = async (file: File | undefined) => {
+  const pickCover = async (file: Blob | undefined) => {
     if (!file) return;
     setLoadingCover(true);
     try {
       const coverId = saveCover(await readCoverFile(file));
       setDraft((d) => ({ ...d, coverId }));
     } catch {
-      setCoverError(true);
+      setCoverError(COVER_UNREADABLE);
     } finally {
       setLoadingCover(false);
+    }
+  };
+
+  // PC：モーダルを開いている間は Ctrl+V / ⌘V で画像を貼り付けられる（画像のときだけ受け取り、文字の貼り付けは邪魔しない）
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const image = [...(e.clipboardData?.files ?? [])].find((f) => f.type.startsWith('image/'));
+      if (!image) return;
+      e.preventDefault();
+      void pickCover(image);
+    };
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  });
+
+  // スマホ：「画像を貼り付け」ボタンで、コピーしてある画像を読み取る（iPhone は Safari の「ペースト」の確認をはさむ）
+  const pasteCover = async () => {
+    try {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        const type = item.types.find((t) => t.startsWith('image/'));
+        if (type) return void (await pickCover(await item.getType(type)));
+      }
+      setCoverError(NO_IMAGE_IN_CLIPBOARD);
+    } catch (e) {
+      // 「ペースト」の確認を閉じた・許可しなかったときは何もしない
+      if (e instanceof DOMException && e.name === 'NotAllowedError') return;
+      setCoverError(NO_IMAGE_IN_CLIPBOARD);
     }
   };
 
@@ -90,6 +125,17 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
               e.target.value = '';
             }}
           />
+          {canPasteImage() && (
+            <Button
+              variant="outline"
+              size="M"
+              className={styles.pasteButton}
+              onClick={() => void pasteCover()}
+              disabled={loadingCover}
+            >
+              画像を貼り付け
+            </Button>
+          )}
           {bookSearchAvailable() && (
             <BookSearch onSelect={({ title, author }) => setDraft((d) => ({ ...d, title, author }))} />
           )}
@@ -127,10 +173,10 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
         </div>
       </form>
       <ConfirmDialog
-        open={coverError}
-        message={'画像を読み込めませんでした。\n別の画像を選んでください。'}
+        open={coverError !== null}
+        message={coverError ?? ''}
         confirmLabel="閉じる"
-        onConfirm={() => setCoverError(false)}
+        onConfirm={() => setCoverError(null)}
       />
     </>
   );
