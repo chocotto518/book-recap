@@ -107,6 +107,7 @@ export function ExportStep({ project, template, onCreateAnother }: ExportStepPro
       </div>
       <SaveDoneDialog
         open={saved}
+        title={iosSingleButton ? '完了しました！' : '端末に保存しました！'}
         onClose={() => setSaved(false)}
         onCreateAnother={() => {
           setSaved(false);
