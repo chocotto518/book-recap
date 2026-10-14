@@ -9,6 +9,6 @@ Figma から SVG で書き出して配置するアイコン
 | `open.svg` | メニューの「テンプレート変更」の矢印（20×20） |
 | `preview.svg` | icon/preview（24×24） |
 | `check.svg` | btn-step（check）内の check（20×20、白） |
-| `camera.svg` | 入力モーダルの「撮る」（24×24、仮。Lucide の camera） |
-| `image.svg` | 入力モーダルの「選ぶ」（24×24、仮。Lucide の image） |
-| `clipboard-paste.svg` | 入力モーダルの「貼り付け」（24×24、ユーザー支給。Lucide の clipboard-paste） |
+| `camera.svg` | 入力モーダルの「撮る」（24×24、線 1.5px、仮。Lucide の camera） |
+| `image.svg` | 入力モーダルの「選ぶ」（24×24、線 1.5px、仮。Lucide の image） |
+| `clipboard-paste.svg` | 入力モーダルの「貼り付け」（24×24、線 1.5px、ユーザー支給。Lucide の clipboard-paste） |
