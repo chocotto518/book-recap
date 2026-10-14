@@ -136,7 +136,7 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
               src={cover ?? coverPlaceholder}
               alt=""
             />
-            {!cover && <span className={styles.coverHint}>{loadingCover ? '読み込み中…' : 'タップで画像を選択'}</span>}
+            {loadingCover && <span className={styles.coverHint}>読み込み中…</span>}
           </button>
           <div className={styles.coverActions}>
             {canTakePhoto() && (
