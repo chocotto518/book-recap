@@ -11,16 +11,24 @@ export async function createRecapPng(input: RecapInput): Promise<File> {
   return new File([blob], `book-recap-${stamp}.png`, { type: 'image/png' });
 }
 
-/**
- * スマホなど、共有シートで画像ファイルを渡せる端末か。
- * PC のブラウザにも共有できるものがあるが、PC はダウンロードのほうが分かりやすいので指で操作する端末に限る
- */
-export function canShareImage(file: File) {
+/** 共有シートで画像ファイルを渡せるブラウザか（スマホのほか、Mac の Safari・Chrome など PC にもある） */
+export function canShareFiles(file: File) {
   return (
     typeof navigator !== 'undefined' &&
     typeof navigator.canShare === 'function' &&
-    navigator.canShare({ files: [file] }) &&
-    window.matchMedia('(pointer: coarse)').matches
+    navigator.canShare({ files: [file] })
+  );
+}
+
+/**
+ * iPhone・iPad か。iPhone のブラウザはダウンロードすると「ファイル」アプリに入り、写真には入らない。
+ * 写真に保存できるのは共有シートの「画像を保存」だけなので、保存も共有シートを使う
+ */
+export function isIOS() {
+  if (typeof navigator === 'undefined') return false;
+  return (
+    /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1)
   );
 }
 
