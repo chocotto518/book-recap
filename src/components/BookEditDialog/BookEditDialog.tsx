@@ -3,9 +3,10 @@ import { BookNumber } from '../BookNumber/BookNumber';
 import { BookSearch } from '../BookSearch/BookSearch';
 import { Button } from '../Button/Button';
 import { ConfirmDialog } from '../ConfirmDialog/ConfirmDialog';
+import { CoverCropDialog } from '../CoverCropDialog/CoverCropDialog';
 import { Dialog } from '../Dialog/Dialog';
 import { TextField } from '../TextField/TextField';
-import { readCoverFile, saveCover, useCover } from '../../state/covers';
+import { cropToDataUrl, loadImageBlob, saveCover, useCover, type CropRect } from '../../state/covers';
 import { bookSearchAvailable } from '../../lib/bookSearch';
 import { coverPlaceholder, type Book } from '../../state/project';
 import styles from './BookEditDialog.module.css';
@@ -27,6 +28,11 @@ const NO_IMAGE_IN_CLIPBOARD = '画像がコピーされていません。\n画�
 /** コピーしてある画像をボタンから読み取れるブラウザか */
 const canPasteImage = () => typeof navigator !== 'undefined' && typeof navigator.clipboard?.read === 'function';
 
+/** カメラで撮れる端末か（指で操作する端末。PC では「選ぶ」と同じになるので出さない） */
+const canTakePhoto = () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
+const icon = (name: string) => `${import.meta.env.BASE_URL}icons/${name}.svg`;
+
 /** 1 冊ぶんの情報を入力するモーダル。「保存する」を押すまで一覧には反映しない */
 export function BookEditDialog(props: BookEditDialogProps) {
   return (
@@ -42,7 +48,10 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
   const [loadingCover, setLoadingCover] = useState(false);
   /** 書影を入れられなかったときに出すお知らせ（null なら出さない） */
   const [coverError, setCoverError] = useState<string | null>(null);
+  /** 切り抜き中の画像（撮った・選んだ・貼り付けた画像は、切り抜いてから書影にする） */
+  const [cropImage, setCropImage] = useState<HTMLImageElement | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const cover = useCover(draft.coverId);
   const commentTooLong = withComment && commentMaxLength !== undefined && [...draft.comment].length > commentMaxLength;
 
@@ -50,8 +59,7 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
     if (!file) return;
     setLoadingCover(true);
     try {
-      const coverId = saveCover(await readCoverFile(file));
-      setDraft((d) => ({ ...d, coverId }));
+      setCropImage(await loadImageBlob(file));
     } catch {
       setCoverError(COVER_UNREADABLE);
     } finally {
@@ -59,11 +67,27 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
     }
   };
 
+  const closeCrop = () => {
+    if (cropImage) URL.revokeObjectURL(cropImage.src);
+    setCropImage(null);
+  };
+
+  const confirmCrop = (rect: CropRect) => {
+    if (!cropImage) return;
+    try {
+      const coverId = saveCover(cropToDataUrl(cropImage, rect));
+      setDraft((d) => ({ ...d, coverId }));
+    } catch {
+      setCoverError(COVER_UNREADABLE);
+    }
+    closeCrop();
+  };
+
   // PC：モーダルを開いている間は Ctrl+V / ⌘V で画像を貼り付けられる（画像のときだけ受け取り、文字の貼り付けは邪魔しない）
   useEffect(() => {
     const onPaste = (e: ClipboardEvent) => {
       const image = [...(e.clipboardData?.files ?? [])].find((f) => f.type.startsWith('image/'));
-      if (!image) return;
+      if (!image || cropImage) return;
       e.preventDefault();
       void pickCover(image);
     };
@@ -114,6 +138,51 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
             />
             {!cover && <span className={styles.coverHint}>{loadingCover ? '読み込み中…' : 'タップで画像を選択'}</span>}
           </button>
+          <div className={styles.coverActions}>
+            {canTakePhoto() && (
+              <button
+                type="button"
+                className={styles.coverAction}
+                onClick={() => cameraRef.current?.click()}
+                disabled={loadingCover}
+              >
+                <span
+                  className={styles.coverActionIcon}
+                  style={{ maskImage: `url(${icon('camera')})`, WebkitMaskImage: `url(${icon('camera')})` }}
+                />
+                撮る
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.coverAction}
+              onClick={() => fileRef.current?.click()}
+              disabled={loadingCover}
+            >
+              <span
+                className={styles.coverActionIcon}
+                style={{ maskImage: `url(${icon('image')})`, WebkitMaskImage: `url(${icon('image')})` }}
+              />
+              選ぶ
+            </button>
+            {canPasteImage() && (
+              <button
+                type="button"
+                className={styles.coverAction}
+                onClick={() => void pasteCover()}
+                disabled={loadingCover}
+              >
+                <span
+                  className={styles.coverActionIcon}
+                  style={{
+                    maskImage: `url(${icon('clipboard-paste')})`,
+                    WebkitMaskImage: `url(${icon('clipboard-paste')})`,
+                  }}
+                />
+                貼り付け
+              </button>
+            )}
+          </div>
           <input
             ref={fileRef}
             className={styles.file}
@@ -125,17 +194,18 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
               e.target.value = '';
             }}
           />
-          {canPasteImage() && (
-            <Button
-              variant="outline"
-              size="M"
-              className={styles.pasteButton}
-              onClick={() => void pasteCover()}
-              disabled={loadingCover}
-            >
-              画像を貼り付け
-            </Button>
-          )}
+          <input
+            ref={cameraRef}
+            className={styles.file}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            tabIndex={-1}
+            onChange={(e) => {
+              void pickCover(e.target.files?.[0]);
+              e.target.value = '';
+            }}
+          />
           {bookSearchAvailable() && (
             <BookSearch onSelect={({ title, author }) => setDraft((d) => ({ ...d, title, author }))} />
           )}
@@ -172,6 +242,7 @@ function BookEditForm({ book, index, withComment, commentMaxLength, onCancel, on
           </Button>
         </div>
       </form>
+      <CoverCropDialog image={cropImage} onCancel={closeCrop} onConfirm={confirmCrop} />
       <ConfirmDialog
         open={coverError !== null}
         message={coverError ?? ''}

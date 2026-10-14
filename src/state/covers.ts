@@ -60,23 +60,35 @@ export function useCover(id: string | null): string | null {
   );
 }
 
-/** 端末から選んだ画像を、書き出しに十分な大きさ（長辺 900px）の JPEG に縮めて data URL にする */
-export async function readCoverFile(file: Blob, maxSize = 900): Promise<string> {
-  const url = URL.createObjectURL(file);
+/**
+ * 画像（端末から選んだ・撮った・貼り付けた）を読み込む。読めない画像なら失敗する。
+ * 使い終わったら `URL.revokeObjectURL(img.src)` で片付ける
+ */
+export async function loadImageBlob(blob: Blob): Promise<HTMLImageElement> {
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.src = url;
   try {
-    const img = new Image();
-    img.src = url;
     await img.decode();
-    const scale = Math.min(1, maxSize / Math.max(img.naturalWidth, img.naturalHeight));
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(img.naturalWidth * scale);
-    canvas.height = Math.round(img.naturalHeight * scale);
-    const ctx = canvas.getContext('2d')!;
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL('image/jpeg', 0.85);
-  } finally {
+    return img;
+  } catch (e) {
     URL.revokeObjectURL(url);
+    throw e;
   }
 }
+
+export type CropRect = { x: number; y: number; w: number; h: number };
+
+/** 画像の一部（元の画像の大きさでの範囲）を切り出し、長辺 maxSize の JPEG の data URL にする */
+export function cropToDataUrl(img: HTMLImageElement, rect: CropRect, maxSize = 900): string {
+  const scale = Math.min(1, maxSize / Math.max(rect.w, rect.h));
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(rect.w * scale));
+  canvas.height = Math.max(1, Math.round(rect.h * scale));
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, rect.x, rect.y, rect.w, rect.h, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', 0.85);
+}
+
