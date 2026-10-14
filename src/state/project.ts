@@ -55,8 +55,6 @@ export const fitBooks = (books: Book[] | undefined, count: number): Book[] => {
   return list;
 };
 
-export const templateThumbnail = ({ type, count }: Template) =>
-  `${import.meta.env.BASE_URL}images/count-${type}-${count}.png`;
 
 export const coverPlaceholder = `${import.meta.env.BASE_URL}images/cover-placeholder.svg`;
 
