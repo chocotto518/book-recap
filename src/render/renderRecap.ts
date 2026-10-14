@@ -49,7 +49,7 @@ async function prepare(input: RecapInput) {
   const sample = Object.values(SAMPLE).join('') + TEXT.copyright.text;
   if (typeof document !== 'undefined' && document.fonts) {
     await Promise.all(
-      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, GRID_TEXT.author, { size: 20, weight: 700 }, { size: 20, weight: 400 }, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
+      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, GRID_TEXT.author, { size: 20, weight: 600 }, { size: 20, weight: 400 }, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
         document.fonts.load(font(style), texts + sample).catch(() => []),
       ),
     );

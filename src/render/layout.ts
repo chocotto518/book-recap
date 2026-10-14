@@ -26,7 +26,7 @@ export const TEXT = {
     centerYWithoutUser: 1398.5,
     text: '表紙画像の著作権は各出版社・著作者に帰属します',
   },
-  title: { size: 36, weight: 700, lineHeight: 52, maxLines: 2 },
+  title: { size: 36, weight: 600, lineHeight: 52, maxLines: 2 },
   author: { size: 32, weight: 400 },
   comment: { size: 24, weight: 400, lineHeight: 32 },
 };
@@ -69,7 +69,7 @@ export const GRID_TEXT = {
   /** 書影の下の文字エリアの高さ。タイトル・作者はこの中に収める */
   areaHeight: 144,
   /** タイトル：32px・最大 2 行。収まらなければ minSize まで小さくする */
-  title: { size: 32, minSize: 20, weight: 700, lineHeightRatio: 1.25, maxLines: 2 },
+  title: { size: 32, minSize: 20, weight: 600, lineHeightRatio: 1.25, maxLines: 2 },
   /** 作者：24px・最大 2 行。収まらなければ minSize まで小さくする */
   author: { size: 24, minSize: 20, weight: 400, lineHeightRatio: 4 / 3, maxLines: 2 },
   /** 書影の下端 → タイトル 1 行目の上端（32px 1 行のとき、中心が Figma の見本の位置に来る） */
