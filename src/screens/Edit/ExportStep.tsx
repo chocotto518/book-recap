@@ -52,17 +52,20 @@ export function ExportStep({ project, template, onCreateAnother }: ExportStepPro
 
   const postText = project.theme;
 
-  // 端末に保存：Android・PC はダウンロード（Android はそのまま写真アプリの「Download」に入る）。
-  // iPhone はダウンロードだと「ファイル」アプリに入ってしまうため、共有シートを開いて「画像を保存」で写真に入れてもらう
-  const save = async () => {
+  // iPhone はボタン 1 つ（保存する）。写真に入れられるのは共有シートの「画像を保存」だけで、
+  // 保存も共有も同じ共有シートになるため。共有シートを閉じた（キャンセルした）ときはポップアップを出さない
+  const iosSingleButton = isIOS() && typeof navigator.share === 'function';
+
+  const saveOnIOS = async () => {
     if (!file) return;
-    if (isIOS() && canShareFiles(file)) {
-      // 共有シートを閉じた（キャンセルした）ときは出さない
-      if (await shareFile(file)) setSaved(true);
-    } else {
-      downloadFile(file);
-      setSaved(true);
-    }
+    if (await shareFile(file, postText)) setSaved(true);
+  };
+
+  // Android・PC の「端末に保存する」：ダウンロード（Android は写真アプリの「Download」に入る）
+  const save = () => {
+    if (!file) return;
+    downloadFile(file);
+    setSaved(true);
   };
 
   // 共有する：共有シートを開く（X・LINE などを選べる。文章はテーマ）。共有シートがない PC は、保存してから X の投稿画面を開く
@@ -87,12 +90,20 @@ export function ExportStep({ project, template, onCreateAnother }: ExportStepPro
         )}
       </div>
       <div className={styles.actions}>
-        <Button onClick={() => void save()} disabled={!file}>
-          端末に保存する
-        </Button>
-        <Button variant="secondary" onClick={() => void share()} disabled={!file}>
-          共有する
-        </Button>
+        {iosSingleButton ? (
+          <Button onClick={() => void saveOnIOS()} disabled={!file}>
+            保存する
+          </Button>
+        ) : (
+          <>
+            <Button onClick={save} disabled={!file}>
+              端末に保存する
+            </Button>
+            <Button variant="secondary" onClick={() => void share()} disabled={!file}>
+              共有する
+            </Button>
+          </>
+        )}
       </div>
       <SaveDoneDialog
         open={saved}
