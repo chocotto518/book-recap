@@ -72,9 +72,55 @@
   gap: var(--space-4);
 }
 
-/* 仮デザイン：書影の下の「画像を貼り付け」 */
-.pasteButton {
-  width: auto;
-  min-width: 160px;
-  padding-inline: var(--space-4);
+/* 仮デザイン：書影の下に「撮る」「選ぶ」「貼り付け」をアイコン＋文字で横に並べる */
+.coverActions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.coverAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 64px;
+  min-height: var(--tap-min);
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-card);
+  background: none;
+  color: var(--color-sub-text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14.4px;
+  cursor: pointer;
+}
+
+.coverAction:active {
+  background: var(--color-bg);
+}
+
+.coverAction:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.coverAction:focus-visible {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 2px;
+}
+
+/* SVG は線の色を持たないので、文字と同じ色で塗る */
+.coverActionIcon {
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
 }
