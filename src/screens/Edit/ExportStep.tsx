@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '../../components/Button/Button';
 import { SaveDoneDialog } from '../../components/SaveDoneDialog/SaveDoneDialog';
 import { paletteOf } from '../../render/colors';
-import { canShareImage, createRecapPng, downloadFile, openXIntent, shareFile } from '../../render/exportImage';
+import { canShareFiles, createRecapPng, downloadFile, isIOS, openXIntent, shareFile } from '../../render/exportImage';
 import type { Project, Template } from '../../state/project';
 import styles from './ExportStep.module.css';
 
@@ -52,9 +52,11 @@ export function ExportStep({ project, template, onCreateAnother }: ExportStepPro
 
   const postText = project.theme;
 
+  // 端末に保存：Android・PC はダウンロード（Android はそのまま写真アプリの「Download」に入る）。
+  // iPhone はダウンロードだと「ファイル」アプリに入ってしまうため、共有シートを開いて「画像を保存」で写真に入れてもらう
   const save = async () => {
     if (!file) return;
-    if (canShareImage(file)) {
+    if (isIOS() && canShareFiles(file)) {
       // 共有シートを閉じた（キャンセルした）ときは出さない
       if (await shareFile(file)) setSaved(true);
     } else {
@@ -63,13 +65,12 @@ export function ExportStep({ project, template, onCreateAnother }: ExportStepPro
     }
   };
 
-  const shareToX = async () => {
+  // 共有する：共有シートを開く（X・LINE などを選べる。文章はテーマ）。共有シートがない PC は、保存してから X の投稿画面を開く
+  const share = async () => {
     if (!file) return;
-    if (canShareImage(file)) {
-      // スマホ：共有シートで X アプリを選ぶと画像付きで投稿できる
+    if (canShareFiles(file)) {
       await shareFile(file, postText);
     } else {
-      // PC：X の投稿画面には画像を添付できないため、先に保存してから投稿画面を開く
       downloadFile(file);
       openXIntent(postText);
     }
@@ -87,10 +88,10 @@ export function ExportStep({ project, template, onCreateAnother }: ExportStepPro
       </div>
       <div className={styles.actions}>
         <Button onClick={() => void save()} disabled={!file}>
-          端末に保存
+          端末に保存する
         </Button>
-        <Button variant="secondary" onClick={() => void shareToX()} disabled={!file}>
-          Xで共有
+        <Button variant="secondary" onClick={() => void share()} disabled={!file}>
+          共有する
         </Button>
       </div>
       <SaveDoneDialog
