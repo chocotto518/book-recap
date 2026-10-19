@@ -83,7 +83,7 @@ export function EditScreen({ project, template, step, onStepChange, onChange, on
       <main className={styles.main}>
         {step < EXPORT_STEP && <Stepbar steps={EDIT_STEPS} current={step} width={304} gap={7} onStepClick={goTo} />}
         {step === 0 ? (
-          <PostInfoStep project={project} onChange={onChange} onNext={() => goTo(1)} />
+          <PostInfoStep project={project} template={template} onChange={onChange} onNext={() => goTo(1)} />
         ) : step === 1 ? (
           <RegisterBooksStep
             template={template}
