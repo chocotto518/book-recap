@@ -19,7 +19,7 @@ export const TEXT = {
   header: { size: 24, weight: 500, centerY: 58, lineY: 58, gap: 24 },
   footer: { size: 16, weight: 400, centerY: 1379, lineY: 1378, gap: 24 },
   copyright: {
-    size: 11,
+    size: 13,
     weight: 400,
     centerY: 1407.5,
     /** テーマあり・ユーザー名なしのとき（線のすぐ下に寄せる） */
