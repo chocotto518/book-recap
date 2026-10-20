@@ -10,15 +10,8 @@ type PostInfoStepProps = {
   onNext: () => void;
 };
 
-/**
- * 説明図の見本画像（テンプレートごと）。用意できている見本の一覧。
- * まだない組み合わせはリスト型 4 冊の見本を出す。どの見本もテーマ・ユーザー名の位置は同じなので、指す線は共通
- */
-const POST_INFO_SAMPLES = new Set(['list-4', 'grid-1', 'grid-2', 'grid-3', 'grid-4', 'grid-5']);
-const postInfoSample = ({ type, count }: Template) => {
-  const key = POST_INFO_SAMPLES.has(`${type}-${count}`) ? `${type}-${count}` : 'list-4';
-  return `${import.meta.env.BASE_URL}images/post-info-${key}.png`;
-};
+/** 説明図の見本画像（テンプレートごと）。どの見本もテーマ・ユーザー名の位置は同じなので、指す線は共通 */
+const postInfoSample = ({ type, count }: Template) => `${import.meta.env.BASE_URL}images/post-info-${type}-${count}.png`;
 
 /** 編集 step1：投稿情報（テーマ・ユーザー名） */
 export function PostInfoStep({ project, template, onChange, onNext }: PostInfoStepProps) {
