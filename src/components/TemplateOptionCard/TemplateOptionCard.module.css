@@ -11,7 +11,7 @@
   box-shadow: var(--shadow-card);
   text-align: left;
   cursor: pointer;
-  transition: box-shadow 0.1s ease;
+  transition: box-shadow 0.1s ease, transform 0.1s ease;
 }
 
 .active {
@@ -19,9 +19,10 @@
   box-shadow: none;
 }
 
-/* 押したときは影を消す */
+/* 押したときは影を消して少し小さくする */
 .card:active {
   box-shadow: none;
+  transform: scale(0.98);
 }
 
 .card:focus-visible {
