@@ -129,7 +129,8 @@
   - iPhone は保存も共有も同じ共有シートになり違いが分からないため、**iPhone はボタン 1 つ「保存する」、Android・PC は 2 つ**（ユーザーの決定）。iPhone は共有シートで X などを選んでも出るので、見出しを「完了しました！」にしている（Android・PC は「端末に保存しました！」）
   - 「共有する」は共有シートが使えるブラウザなら PC でも共有シート（以前は指で操作する端末だけだった）。使えない PC はダウンロード＋X の投稿画面
 - favicon・OGP（2026-10-26）：`public/` 直下に置き、`index.html` の `<head>` から参照
-  - `favicon.ico`（32×32）・`icon.svg`（ユーザー支給）。`apple-touch-icon.png`（180）・`icon-192.png`・`icon-512.png` は icon.svg を Chromium で描いて書き出したもの
+  - `favicon.ico`（32×32、ユーザー支給。2026-10-26 に顔だけのデザインに差し替え）。ブラウザは SVG があるとそちらを優先するので、`index.html` から `icon.svg`（前の 2 冊の本のデザイン）の参照は外した（ファイルは残してある）
+  - `apple-touch-icon.png`（180）・`icon-192.png`・`icon-512.png` はまだ前のデザイン（icon.svg から書き出したもの）。**新しいデザインの大きい画像（SVG か 512px 以上の PNG）をもらったら差し替える**
   - `site.webmanifest`：名前「わたしの本棚メーカー」、短い名前「本棚メーカー」、`display: browser`（ホーム画面に追加してもブラウザで開く。standalone にすると iPhone の共有・戻る操作の動きが変わるので避けた）
   - OGP：タイトル・説明「テーマに沿って選んだ本を、1枚の画像にまとめて保存・共有できるウェブアプリ」・画像（`ogp.png`、1200×630、絶対 URL）・`twitter:card` は `summary_large_image`。URL を変えたら og:url・og:image も直す
 - モーダルが重なったとき（テンプレート変更の上の確認、入力モーダルの上の画像エラー）、Esc は一番上だけを閉じる（`components/overlayStack.ts`）
