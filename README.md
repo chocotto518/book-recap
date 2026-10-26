@@ -27,6 +27,6 @@ npm run dev
 
 `main` に push されると GitHub Actions がビルドし、GitHub Pages に公開する。
 
-https://chocotto518.github.io/book-recap/
+https://chocotto518.github.io/my-bookshelf-maker/
 
 初回のみ、リポジトリの Settings → Pages → Build and deployment → Source を「GitHub Actions」にする。

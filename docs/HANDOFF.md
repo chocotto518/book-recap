@@ -14,7 +14,10 @@
 
 ## 2. 環境まわりの注意
 
-- 公開 URL：https://chocotto518.github.io/book-recap/ （`main` に入ると GitHub Actions で自動公開）
+- 公開 URL：https://chocotto518.github.io/my-bookshelf-maker/ （`main` に入ると GitHub Actions で自動公開）
+  - 2026-10-26 に URL を book-recap → my-bookshelf-maker に変更（リポジトリ名を `chocotto518/my-bookshelf-maker` に改名、`vite.config.ts` の `base` も同じ名前）。古い URL は 404 になる
+  - 画面に見える名前も変更：タブの題名 `my-bookshelf-maker`、保存する画像のファイル名 `my-bookshelf-日付.png`
+  - localStorage のキー（`book-recap:project`・`book-recap:route`・`book-recap:cover:<id>`）はそのまま（変えると保存済みの入力内容が読めなくなる。ユーザー了承済み）
 - クラウド環境のネットワーク許可に `www.figma.com` が入っている（Figma の画像アセットを curl で取得できる）
 - **Figma MCP は Starter プランの呼び出し上限に一度達した**。読めないときは、ユーザーにスクショ（2x、750px 幅）や CSS を貼ってもらう。スクショから測るときは Pillow（`pip install pillow` 済みとは限らない）で座標を拾う
 - Playwright で外部（Google Fonts）を読むときは `proxy: { server: process.env.HTTPS_PROXY, bypass: 'localhost,127.0.0.1' }` を付ける
@@ -48,7 +51,7 @@
 
 > **再開の合図**：ユーザーが「楽天書名検索の準備を進めたい」と言ったら、下の「1. 書誌情報・書影の自動入力」の時点（2026-10-09）から再開する。
 > その時点の状況：
-> - 楽天デベロッパーのアプリ ID は**まだ未登録**（再開時にユーザーが登録する）。登録画面の入れ方は案内済み：アプリ名 `book-recap`（あとで変えてよい）、URL `https://chocotto518.github.io/book-recap/`、種類「ウェブアプリケーション」、Allowed websites は `chocotto518.github.io` の 1 行だけ。アクセスキーが出たら、ページ内に見える前提でよいかユーザーと確認してから使う
+> - 楽天デベロッパーのアプリ ID は**まだ未登録**（再開時にユーザーが登録する）。登録画面の入れ方は案内済み：アプリ名 `book-recap`（あとで変えてよい）、URL `https://chocotto518.github.io/my-bookshelf-maker/`、種類「ウェブアプリケーション」、Allowed websites は `chocotto518.github.io` の 1 行だけ。アクセスキーが出たら、ページ内に見える前提でよいかユーザーと確認してから使う
 > - 決まっていること：書名・作者名で検索 → 候補 → タップでタイトル・作者を入れる（画面は仮デザインで実装済み、ID 待ち）。楽天の書影は規約上使わない
 > - 未決：①候補一覧に楽天の商品ページへのリンクを付けるか ②openBD に書影がある本（版元ドットコムで承諾済み）だけ img.hanmoto.com の書影を自動で入れるか
 > - **カメラの扱いもこのとき決める**。ユーザーの希望は「書影の自動取得より、撮りやすくする工夫を優先」：①「カメラで撮る」「写真から選ぶ」のボタンを分ける（`capture="environment"`）＋②撮ったあと／選んだあとに四角い枠で表紙だけ切り抜く画面（発展で 4 隅を合わせて斜めを補正）を提案済みで、ユーザーは好感触

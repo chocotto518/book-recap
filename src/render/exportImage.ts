@@ -8,7 +8,7 @@ export async function createRecapPng(input: RecapInput): Promise<File> {
   );
   const date = new Date();
   const stamp = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-  return new File([blob], `book-recap-${stamp}.png`, { type: 'image/png' });
+  return new File([blob], `my-bookshelf-${stamp}.png`, { type: 'image/png' });
 }
 
 /** 共有シートで画像ファイルを渡せるブラウザか（スマホのほか、Mac の Safari・Chrome など PC にもある） */
