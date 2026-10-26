@@ -1,11 +1,19 @@
 import { bookCountOptions, type TemplateType } from '../constants/template';
 
 /**
- * テンプレート設定・投稿情報で使う見本画像（WebP）。
+ * テンプレート設定・投稿情報で使う見本画像（WebP、`src/assets/samples/`）。
+ * Vite が中身に応じた印をファイル名に付けるので、画像を差し替えるとすぐ新しいものが読み込まれる
+ * （public に置くと同じ名前のまま公開され、ブラウザや GitHub Pages が古い画像を覚えていることがある）。
  * 作品数の選択（count-*）は拡大表示（幅約 300px）でもぼやけない 900px 幅、
  * 感想の有無（template-*）は表示 86×114 の 4 倍、投稿情報（post-info-*）は表示 195×260 の 3 倍
  */
-const image = (name: string) => `${import.meta.env.BASE_URL}images/${name}.webp`;
+const SAMPLES = import.meta.glob<string>('../assets/samples/*.webp', { eager: true, import: 'default' });
+
+const image = (name: string) => {
+  const url = SAMPLES[`../assets/samples/${name}.webp`];
+  if (!url) throw new Error(`見本画像がありません：${name}`);
+  return url;
+};
 
 export const templateTypeThumbnail = (type: TemplateType) => image(`template-${type}`);
 export const bookCountThumbnail = (type: TemplateType, count: number) => image(`count-${type}-${count}`);

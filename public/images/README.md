@@ -42,3 +42,5 @@ Figma から書き出して配置する画像（`cover-placeholder.svg` 以外�
 | `post-info-*.webp` | 585×780 | 投稿情報の説明図（195×260 の 3 倍） |
 
 画質は WebP の quality 88。差し替えるときは元の画像（1080×1440 の PNG など）をこの大きさ・形式に変換して置く。URL は `src/lib/templateImages.ts` にまとめてある
+
+**2026-10-26：テンプレート設定・投稿情報の見本（`count-*`・`template-*`・`post-info-*`）は `src/assets/samples/` に移した。** public に置くと同じファイル名で公開され、差し替えてもブラウザや GitHub Pages が古い画像を最大 10 分ほど覚えていて、すぐ変わらないため。src に置くと Vite がファイル名に中身の印（例 `count-list-4-AbC123.webp`）を付ける。このフォルダに残っているのは `cover-placeholder.svg` だけ
