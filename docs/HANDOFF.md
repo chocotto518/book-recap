@@ -130,7 +130,7 @@
   - 「共有する」は共有シートが使えるブラウザなら PC でも共有シート（以前は指で操作する端末だけだった）。使えない PC はダウンロード＋X の投稿画面
 - favicon・OGP（2026-10-26）：`public/` 直下に置き、`index.html` の `<head>` から参照
   - `favicon.ico`（32×32、ユーザー支給。2026-10-26 に顔だけのデザインに差し替え）。ブラウザは SVG があるとそちらを優先するので、`index.html` から `icon.svg`（前の 2 冊の本のデザイン）の参照は外した（ファイルは残してある）
-  - `apple-touch-icon.png`（180）・`icon-192.png`・`icon-512.png` はまだ前のデザイン（icon.svg から書き出したもの）。**新しいデザインの大きい画像（SVG か 512px 以上の PNG）をもらったら差し替える**
+  - `icon.svg` は 2026-10-26 にユーザー支給の新しい版（茶色の背景に本 2 冊）に差し替え。`apple-touch-icon.png`（180）・`icon-192.png`・`icon-512.png`・`ogp.png` のアイコン部分は、この icon.svg を Chromium で描いて書き出し直した。タブのアイコンは引き続き `favicon.ico`（顔）
   - `site.webmanifest`：名前「わたしの本棚メーカー」、短い名前「本棚メーカー」、`display: browser`（ホーム画面に追加してもブラウザで開く。standalone にすると iPhone の共有・戻る操作の動きが変わるので避けた）
   - OGP：タイトル・説明「テーマに沿って選んだ本を、1枚の画像にまとめて保存・共有できるウェブアプリ」・画像（`ogp.png`、1200×630、絶対 URL）・`twitter:card` は `summary_large_image`。URL を変えたら og:url・og:image も直す
 - 作品数の選択の見本（`count-*.webp`）も 2026-10-26 に、投稿情報の説明図と同じ支給画像（テーマ「心にグッと来た恋愛小説4選」、タイトル SemiBold、著作権表記 13px・#666666）に差し替え。以前の Figma の書き出し（テーマ「今月のおすすめ本」）は使っていない。感想の有無のサムネイル（`template-list.webp`＝リスト型 4 冊、`template-grid.webp`＝グリッド型 6 冊の見本）も同じ日に差し替え
