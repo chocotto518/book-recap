@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../../components/Button/Button';
 import { Header } from '../../components/Header/Header';
 import { Stepbar } from '../../components/Stepbar/Stepbar';
 import { TemplateOptionCard } from '../../components/TemplateOptionCard/TemplateOptionCard';
 import { TEMPLATE_CHANGE_TITLE, TEMPLATE_SETTINGS_STEPS, TEMPLATE_SETTINGS_TITLE } from '../../constants/flow';
 import { MAX_BOOKS } from '../../constants/template';
+import { preloadBookCountThumbnails, templateTypeThumbnail } from '../../lib/templateImages';
 import styles from './CommentChoiceScreen.module.css';
 
 /** 編集画面の「テンプレート変更」から開いたときの設定 */
@@ -35,6 +36,9 @@ export function CommentChoiceScreen({ onSelect, onBack, change, initialHasCommen
   const [selected, setSelected] = useState(initialHasComment ?? change?.currentHasComment ?? true);
   const choose = (hasComment: boolean) => (change ? setSelected(hasComment) : onSelect(hasComment));
 
+  // 次の「作品数の選択」の見本を、この画面を開いたときに裏で読み込んでおく
+  useEffect(preloadBookCountThumbnails, []);
+
   return (
     <div className={styles.screen}>
       <Header title={change ? TEMPLATE_CHANGE_TITLE : TEMPLATE_SETTINGS_TITLE} onBack={onBack} />
@@ -52,14 +56,14 @@ export function CommentChoiceScreen({ onSelect, onBack, change, initialHasCommen
             <TemplateOptionCard
               title="感想を書く"
               description={`1枚につき最大${MAX_BOOKS.list}冊`}
-              thumbnailSrc={`${import.meta.env.BASE_URL}images/template-list.png`}
+              thumbnailSrc={templateTypeThumbnail('list')}
               active={change ? selected : undefined}
               onSelect={() => choose(true)}
             />
             <TemplateOptionCard
               title="感想を書かない"
               description={`1枚につき最大${MAX_BOOKS.grid}冊`}
-              thumbnailSrc={`${import.meta.env.BASE_URL}images/template-grid.png`}
+              thumbnailSrc={templateTypeThumbnail('grid')}
               active={change ? !selected : undefined}
               onSelect={() => choose(false)}
             />

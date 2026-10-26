@@ -2,7 +2,7 @@ import type { TemplateType } from '../constants/template';
 
 /**
  * 書き出し画像（1080×1440）のレイアウト定義。
- * Figma のテンプレート見本（public/images/count-*.png とカラー見本）を実測した値。
+ * Figma のテンプレート見本（public/images/count-* の元の PNG とカラー見本）を実測した値。
  * 画面上のプレビューと書き出しの両方がこの定義から描かれる。
  */
 export type Rect = { x: number; y: number; w: number; h: number };

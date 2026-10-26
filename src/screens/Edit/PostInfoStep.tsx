@@ -1,6 +1,7 @@
 import { Button } from '../../components/Button/Button';
 import { TextField } from '../../components/TextField/TextField';
 import type { Project, Template } from '../../state/project';
+import { postInfoSample } from '../../lib/templateImages';
 import styles from './PostInfoStep.module.css';
 
 type PostInfoStepProps = {
@@ -9,9 +10,6 @@ type PostInfoStepProps = {
   onChange: (patch: Partial<Project>) => void;
   onNext: () => void;
 };
-
-/** 説明図の見本画像（テンプレートごと）。どの見本もテーマ・ユーザー名の位置は同じなので、指す線は共通 */
-const postInfoSample = ({ type, count }: Template) => `${import.meta.env.BASE_URL}images/post-info-${type}-${count}.png`;
 
 /** 編集 step1：投稿情報（テーマ・ユーザー名） */
 export function PostInfoStep({ project, template, onChange, onNext }: PostInfoStepProps) {
@@ -39,7 +37,7 @@ export function PostInfoStep({ project, template, onChange, onNext }: PostInfoSt
       <figure className={styles.diagram} aria-label="テーマは画像の上部、ユーザー名は画像の下部に入ります">
         <img
           className={styles.thumbnail}
-          src={postInfoSample(template)}
+          src={postInfoSample(template.type, template.count)}
           alt=""
           width={195}
           height={260}
