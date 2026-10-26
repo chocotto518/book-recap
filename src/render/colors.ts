@@ -13,7 +13,7 @@ export type Palette = {
 };
 
 export const AUTHOR_COLOR = '#6b6b6b';
-export const COPYRIGHT_COLOR = '#7e7c7d';
+export const COPYRIGHT_COLOR = '#666666';
 
 export const PALETTES: Palette[] = [
   { id: 'default', label: 'デフォルト', accent: '#000000', background: '#ffffff', comment: '#000000' },

@@ -95,7 +95,7 @@
 - 折り返しは `Intl.Segmenter` で単語単位（Figma の見本と改行位置が違うことがあるが、ユーザー了承済み）
 - 出力画像の本のタイトルは SemiBold（600）。2026-10-14 に Bold（700）から変更（ユーザーの希望）。テンプレート設定の見本画像（`public/images/count-*`・`template-*`、Figma の書き出し）は Bold のまま
 - 投稿情報の説明図（2026-10-14 変更）：見本画像をユーザー支給の `post-info-list-4.png`（旧 `post-info-sample.png`、195×260）に差し替え。説明図の上下の間隔は 35px（入力欄との間・ボタンとの間。以前は 51px・49px）で、ボタンの位置は差し替え前より 2px 上。以前は選んだテンプレートの見本（count-*.png、174×232）を出していたが、今はテンプレートによらず同じ画像。指す線は Figma の線画像（annotation-line-*.svg、削除済み）から、SVG の直線 2 本に変更（`PostInfoStep.tsx`、テーマ：(138,11)→(243,29)、ユーザー名：(118,249)→(223,232)。説明図の左上が原点）
-- 出力画像の著作権表記は 13px（2026-10-19 に 11px から変更）。文字の中心の高さ（`render/layout.ts` の `TEXT.copyright.centerY`）は変えていない。テンプレート設定の見本画像（Figma の書き出し）は 11px のまま
+- 出力画像の著作権表記は 13px・#666666（2026-10-19 に 11px から、2026-10-26 に色を #7e7c7d から変更。全カラー共通、`render/colors.ts` の `COPYRIGHT_COLOR`）。文字の中心の高さ（`render/layout.ts` の `TEXT.copyright.centerY`）は変えていない。テンプレート設定の見本画像（Figma の書き出し）は 11px のまま
 - テーマ・ユーザー名に付く罫線は 2px（`render/layout.ts` の `RULE_WIDTH`）
 - カラーの「デフォルト」は黒（#000）。カラー別の背景色・アクセント色は `render/colors.ts`
 - 押せないボタン：塗りはグレー #999、枠線は半透明
