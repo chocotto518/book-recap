@@ -146,3 +146,13 @@
 .coverImage {
   object-fit: contain;
 }
+
+/* 枠を押したときは「+ 登録する」「編集する」を少し小さくする（ボタンと同じ） */
+.action {
+  transition: transform 0.1s ease;
+}
+
+.list:active .action,
+.grid:active .action {
+  transform: scale(0.96);
+}
