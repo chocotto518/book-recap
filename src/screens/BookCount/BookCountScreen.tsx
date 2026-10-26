@@ -7,6 +7,7 @@ import { TEMPLATE_CHANGE_TITLE, TEMPLATE_SETTINGS_STEPS, TEMPLATE_SETTINGS_TITLE
 import { bookCountOptions, COMMENT_MAX_LENGTH, type TemplateType } from '../../constants/template';
 import { useFlip } from '../../hooks/useFlip';
 import { getScroller } from '../../lib/scroller';
+import { bookCountThumbnail } from '../../lib/templateImages';
 import styles from './BookCountScreen.module.css';
 
 type BookCountScreenProps = {
@@ -43,7 +44,7 @@ export function BookCountScreen({
   const cardProps = (count: number) => ({
     count,
     commentMaxLength: templateType === 'list' ? COMMENT_MAX_LENGTH[count] : undefined,
-    thumbnailSrc: `${import.meta.env.BASE_URL}images/count-${templateType}-${count}.png`,
+    thumbnailSrc: bookCountThumbnail(templateType, count),
     'data-flip': `count-${count}`,
   });
 

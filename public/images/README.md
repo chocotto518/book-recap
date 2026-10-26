@@ -1,6 +1,6 @@
 # images
 
-Figma から書き出して配置する画像（`cover-placeholder.svg` 以外は 1080×1440 の 3:4）
+Figma から書き出して配置する画像（`cover-placeholder.svg` 以外は 3:4 の WebP）
 
 見本の書影（格子柄だった部分）は、Figma の書き出しに `cover-placeholder.svg` を描き込んで差し替えている。Figma から書き出し直すときは、書影の枠もこの SVG にしておく。
 
@@ -8,15 +8,15 @@ Figma から書き出して配置する画像（`cover-placeholder.svg` 以外�
 
 | ファイル名 | 用途 |
 | --- | --- |
-| `template-list.png` | 「感想を書く」のサムネイル |
-| `template-grid.png` | 「感想を書かない」のサムネイル |
+| `template-list.webp` | 「感想を書く」のサムネイル |
+| `template-grid.webp` | 「感想を書かない」のサムネイル |
 
 ## テンプレート設定 › 作品数の選択
 
 | ファイル名 | 用途 |
 | --- | --- |
-| `count-list-4.png` 〜 `count-list-1.png` | 感想あり（リスト型）4冊〜1冊のサムネイル |
-| `count-grid-6.png` 〜 `count-grid-1.png` | 感想なし（グリッド型）6冊〜1冊のサムネイル |
+| `count-list-4.webp` 〜 `count-list-1.webp` | 感想あり（リスト型）4冊〜1冊のサムネイル |
+| `count-grid-6.webp` 〜 `count-grid-1.webp` | 感想なし（グリッド型）6冊〜1冊のサムネイル |
 
 ## 書影が未設定の枠
 
@@ -28,7 +28,17 @@ Figma から書き出して配置する画像（`cover-placeholder.svg` 以外�
 
 | ファイル名 | 用途 |
 | --- | --- |
-| `post-info-list-1.png` 〜 `post-info-list-4.png` | テーマ・ユーザー名がどこに入るかの説明図の見本：感想あり（リスト型）1〜4 冊 |
-| `post-info-grid-1.png` 〜 `post-info-grid-6.png` | 同：感想なし（グリッド型）1〜6 冊 |
+| `post-info-list-1.webp` 〜 `post-info-list-4.webp` | テーマ・ユーザー名がどこに入るかの説明図の見本：感想あり（リスト型）1〜4 冊 |
+| `post-info-grid-1.webp` 〜 `post-info-grid-6.webp` | 同：感想なし（グリッド型）1〜6 冊 |
 
 いずれもユーザー支給の 1080×1440 を 585×780 に縮小（画面では 195×260）。テーマ・ユーザー名の文字の位置はすべて同じ（指す線は共通）。list-1〜3 は支給画像の書影が格子柄だったので、`cover-placeholder.svg` を描き込んでから縮小した
+
+## 大きさと形式（2026-10-26 に PNG から WebP に変更。読み込みを軽くするため）
+
+| ファイル | 大きさ | 画面での表示 |
+| --- | --- | --- |
+| `count-*.webp` | 900×1200 | 作品数の選択のカード（拡大時は幅約 300px） |
+| `template-*.webp` | 344×456 | 感想の有無のカード（86×114 の 4 倍） |
+| `post-info-*.webp` | 585×780 | 投稿情報の説明図（195×260 の 3 倍） |
+
+画質は WebP の quality 88。差し替えるときは元の画像（1080×1440 の PNG など）をこの大きさ・形式に変換して置く。URL は `src/lib/templateImages.ts` にまとめてある
