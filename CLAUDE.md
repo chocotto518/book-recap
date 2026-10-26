@@ -87,4 +87,5 @@
 - Vite + React + TypeScript、スタイルは CSS Modules（Tailwind は使わない）
 - デザインは Figma（ファイルキー `iNTmhioqORRRXrxyw2xt13`）。画像・アイコンは Figma から書き出して `public/images`・`public/icons` に置き、`import.meta.env.BASE_URL` を付けて参照する
 - 変更したら `npm run build`（型チェック込み）を通し、375px 幅のブラウザで Figma と位置・大きさを比べてから出す
+- favicon・OGP の画像は `public/` 直下（`favicon.ico`・`icon.svg`・`apple-touch-icon.png`・`icon-192/512.png`・`site.webmanifest`・`ogp.png`）。OGP のタグは `index.html`
 - `main` に入ると GitHub Actions で https://chocotto518.github.io/my-bookshelf-maker/ に公開される（2026-10-26 に book-recap から改名。リポジトリ名と同じ。localStorage のキー `book-recap:*` は保存済みの内容を読めるよう変えない）
