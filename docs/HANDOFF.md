@@ -16,7 +16,7 @@
 
 - 公開 URL：https://chocotto518.github.io/my-bookshelf-maker/ （`main` に入ると GitHub Actions で自動公開）
   - 2026-10-26 に URL を book-recap → my-bookshelf-maker に変更（リポジトリ名を `chocotto518/my-bookshelf-maker` に改名、`vite.config.ts` の `base` も同じ名前）。古い URL は 404 になる
-  - 画面に見える名前も変更：タブの題名 `my-bookshelf-maker`、保存する画像のファイル名 `my-bookshelf-日付.png`
+  - 画面に見える名前も変更：タブの題名「わたしの本棚メーカー」（2026-10-26。一度 `my-bookshelf-maker` にしたあと日本語に）、保存する画像のファイル名 `my-bookshelf-日付.png`
   - localStorage のキー（`book-recap:project`・`book-recap:route`・`book-recap:cover:<id>`）はそのまま（変えると保存済みの入力内容が読めなくなる。ユーザー了承済み）
 - クラウド環境のネットワーク許可に `www.figma.com` が入っている（Figma の画像アセットを curl で取得できる）
 - **Figma MCP は Starter プランの呼び出し上限に一度達した**。読めないときは、ユーザーにスクショ（2x、750px 幅）や CSS を貼ってもらう。スクショから測るときは Pillow（`pip install pillow` 済みとは限らない）で座標を拾う
