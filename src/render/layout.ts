@@ -28,8 +28,14 @@ export const TEXT = {
   },
   title: { size: 36, weight: 600, lineHeight: 52, maxLines: 2 },
   author: { size: 32, weight: 400 },
+  /** 4 冊のときの作者（2026-10-27 に 32px から変更。行の高さ 32px） */
+  authorList4: { size: 28, weight: 400, lineHeight: 32 },
   comment: { size: 24, weight: 400, lineHeight: 32 },
 };
+
+/** リスト型の作者の文字。4 冊だけ小さい */
+export const listAuthorStyle = (count: number): { size: number; weight: number; lineHeight?: number } =>
+  count === 4 ? TEXT.authorList4 : TEXT.author;
 
 const rects = (xs: number[], ys: number[], w: number, h: number): Rect[] =>
   ys.flatMap((y) => xs.map((x) => ({ x, y, w, h })));

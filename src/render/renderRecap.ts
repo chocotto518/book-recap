@@ -2,7 +2,7 @@ import { COMMENT_MAX_LENGTH } from '../constants/template';
 import { getCover } from '../state/covers';
 import { coverPlaceholder, isBookFilled, type Book, type Template } from '../state/project';
 import { AUTHOR_COLOR, COPYRIGHT_COLOR, type Palette } from './colors';
-import { CANVAS, coversFor, FONT_FAMILY, GRID_TEXT, LIST_TEXT, RULE_WIDTH, TEXT, type Rect } from './layout';
+import { CANVAS, coversFor, FONT_FAMILY, GRID_TEXT, LIST_TEXT, listAuthorStyle, RULE_WIDTH, TEXT, type Rect } from './layout';
 import { ellipsize, wrapText } from './text';
 
 export type RecapInput = {
@@ -49,7 +49,7 @@ async function prepare(input: RecapInput) {
   const sample = Object.values(SAMPLE).join('') + TEXT.copyright.text;
   if (typeof document !== 'undefined' && document.fonts) {
     await Promise.all(
-      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, GRID_TEXT.author, { size: 20, weight: 600 }, { size: 20, weight: 400 }, TEXT.author, TEXT.comment, TEXT.copyright].map((style) =>
+      [TEXT.header, TEXT.footer, TEXT.title, GRID_TEXT.title, GRID_TEXT.author, { size: 20, weight: 600 }, { size: 20, weight: 400 }, TEXT.author, TEXT.authorList4, TEXT.comment, TEXT.copyright].map((style) =>
         document.fonts.load(font(style), texts + sample).catch(() => []),
       ),
     );
@@ -122,10 +122,12 @@ function drawHeaderFooter(ctx: CanvasRenderingContext2D, theme: string, userName
   ctx.fillText(TEXT.copyright.text, CANVAS.width / 2, copyrightY);
 }
 
+type BookLines = { title: string[]; author: string; authorStyle: ReturnType<typeof listAuthorStyle>; comment: string[] };
+
 /** 1 冊の本の文字（タイトル・作者・感想）を、指定した位置から縦に並べて描く */
 function drawBookText(
   ctx: CanvasRenderingContext2D,
-  lines: { title: string[]; author: string; comment: string[] },
+  lines: BookLines,
   firstCenterY: number,
   x: number,
   align: CanvasTextAlign,
@@ -141,7 +143,7 @@ function drawBookText(
   if (lines.author) {
     y += LIST_TEXT.titleToAuthor;
     ctx.fillStyle = AUTHOR_COLOR;
-    ctx.font = font(TEXT.author);
+    ctx.font = font(lines.authorStyle);
     ctx.fillText(lines.author, x, y);
   }
   if (lines.comment.length) {
@@ -154,12 +156,13 @@ function drawBookText(
 }
 
 /** タイトル 1 行目の中心から最後の行の下端・上端までの距離（縦の中央揃えに使う） */
-function blockExtent(lines: { title: string[]; author: string; comment: string[] }) {
+function blockExtent(lines: BookLines) {
   let last = (lines.title.length - 1) * TEXT.title.lineHeight;
   let bottomHalf = TEXT.title.lineHeight / 2;
   if (lines.author) {
     last += LIST_TEXT.titleToAuthor;
-    bottomHalf = TEXT.author.size * 0.7;
+    const { size, lineHeight } = lines.authorStyle;
+    bottomHalf = lineHeight ? lineHeight / 2 : size * 0.7;
   }
   if (lines.comment.length) {
     last += LIST_TEXT.authorToComment + (lines.comment.length - 1) * TEXT.comment.lineHeight;
@@ -283,11 +286,12 @@ export async function drawRecap(ctx: CanvasRenderingContext2D, input: RecapInput
 
     ctx.font = font(TEXT.title);
     const titleLines = title ? wrapText(ctx, title, width, TEXT.title.maxLines) : [];
-    ctx.font = font(TEXT.author);
+    const authorStyle = listAuthorStyle(template.count);
+    ctx.font = font(authorStyle);
     const authorLine = author ? ellipsize(ctx, author, width) : '';
     ctx.font = font(TEXT.comment);
     const commentLines = comment ? wrapText(ctx, comment, width) : [];
-    const lines = { title: titleLines.length ? titleLines : [''], author: authorLine, comment: commentLines };
+    const lines = { title: titleLines.length ? titleLines : [''], author: authorLine, authorStyle, comment: commentLines };
 
     if (single) {
       drawBookText(ctx, lines, rect.y + rect.h + LIST_TEXT.single.titleOffset, CANVAS.width / 2, 'center', palette, textLeft);
