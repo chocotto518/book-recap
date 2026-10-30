@@ -1,0 +1,54 @@
+/* 黒い背景に画像を 3:4 のまま画面に収まる最大の大きさで出す。右上に閉じるボタン */
+.backdrop {
+  --top: calc(var(--safe-top) + 56px);
+  --bottom: var(--safe-bottom);
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--top) 0 var(--bottom);
+  background: rgba(0, 0, 0, 0.92);
+  animation: fade-in 0.2s ease;
+}
+
+.image {
+  width: min(100%, calc((100dvh - var(--top) - var(--bottom)) * 3 / 4));
+}
+
+.image canvas {
+  border: 0;
+}
+
+.close {
+  position: absolute;
+  top: calc(var(--safe-top) + var(--space-2));
+  right: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-surface);
+  cursor: pointer;
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--color-surface);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop {
+    animation-duration: 0.01s;
+  }
+}
