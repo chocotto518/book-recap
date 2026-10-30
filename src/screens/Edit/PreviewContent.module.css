@@ -14,7 +14,13 @@
 }
 
 .image {
+  display: block;
+  width: 100%;
   margin-top: var(--space-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
 }
 
 .close {
