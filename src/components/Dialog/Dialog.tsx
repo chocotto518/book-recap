@@ -8,11 +8,13 @@ type DialogProps = {
   onClose: () => void;
   /** 読み上げ用の名前 */
   label: string;
+  /** false にすると背景のタップ・Esc では閉じない（ボタンでだけ閉じる） */
+  dismissible?: boolean;
   children: ReactNode;
 };
 
 /** 画面中央にポップアップするモーダル。背景は暗くなり、背景をタップすると閉じる */
-export function Dialog({ open, onClose, label, children }: DialogProps) {
+export function Dialog({ open, onClose, label, dismissible = true, children }: DialogProps) {
   const [mounted, setMounted] = useState(open);
 
   if (open && !mounted) setMounted(true);
@@ -23,7 +25,7 @@ export function Dialog({ open, onClose, label, children }: DialogProps) {
     document.body.style.overflow = 'hidden';
     const overlay = pushOverlay();
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && overlay.isTop()) onClose();
+      if (dismissible && e.key === 'Escape' && overlay.isTop()) onClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => {
@@ -31,7 +33,7 @@ export function Dialog({ open, onClose, label, children }: DialogProps) {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener('keydown', onKeyDown);
     };
-  }, [open, onClose]);
+  }, [open, onClose, dismissible]);
 
   if (!mounted) return null;
 
@@ -40,7 +42,7 @@ export function Dialog({ open, onClose, label, children }: DialogProps) {
       className={`${styles.backdrop} ${open ? styles.open : styles.closing}`}
       data-scroll-container
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (dismissible && e.target === e.currentTarget) onClose();
       }}
       onAnimationEnd={(e) => {
         if (!open && e.target === e.currentTarget) setMounted(false);

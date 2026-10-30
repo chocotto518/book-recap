@@ -36,7 +36,7 @@ const icon = (name: string) => `${import.meta.env.BASE_URL}icons/${name}.svg`;
 /** 1 冊ぶんの情報を入力するモーダル。「保存する」を押すまで一覧には反映しない */
 export function BookEditDialog(props: BookEditDialogProps) {
   return (
-    <Dialog open={props.open} onClose={props.onCancel} label={`${props.index + 1}冊目の本の情報`}>
+    <Dialog open={props.open} onClose={props.onCancel} dismissible={false} label={`${props.index + 1}冊目の本の情報`}>
       {/* 開くたびに入力中の内容を作り直す */}
       <BookEditForm key={`${props.book.id}-${String(props.open)}`} {...props} />
     </Dialog>
